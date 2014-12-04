@@ -13,13 +13,10 @@ module ISO
     end
 
     def receive_line(line)
-      p "Got line '#{line}'"
       command = JSON.parse(line)
       if command && command['success'] == true
-        p 'Got success back'
         @deferrable.succeed(command)
       else
-        p 'Got fail back'
         @deferrable.fail(command)
       end
     end
@@ -27,16 +24,16 @@ module ISO
 
   # Interface for ISO mounter returns defferrables
   def mount(iso_path)
-    connection = EM.connect_unix_domain CONFIG['ISO_MOUNTER']['SOCKET_PATH'], ISO::Mounter
+    connection = EM.connect_unix_domain "#{CONFIG['ISO_MOUNTER']['WORKING_DIR']}#{File::SEPARATOR}#{CONFIG['ISO_MOUNTER']['SOCKET_FILE']}", ISO::Mounter
     connection.send_line JSON.generate action: 'mount', path: iso_path
     connection.deferrable = EM::DefaultDeferrable.new
   end
 
-  def umount(mount_path)
-    connection = EM.connect_unix_domain CONFIG['ISO_MOUNTER']['SOCKET_PATH'], ISO::Mounter
+  def unmount(mount_path)
+    connection = EM.connect_unix_domain "#{CONFIG['ISO_MOUNTER']['WORKING_DIR']}#{File::SEPARATOR}#{CONFIG['ISO_MOUNTER']['SOCKET_FILE']}", ISO::Mounter
     connection.send_line JSON.generate action: 'unmount', path: mount_path
     connection.deferrable = EM::DefaultDeferrable.new
   end
 
-  module_function :mount, :umount
+  module_function :mount, :unmount
 end

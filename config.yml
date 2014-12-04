@@ -3,4 +3,4 @@ MAIN:
 
 ISO_MOUNTER:
   WORKING_DIR: /tmp/auto_convert/
-  SOCKET_PATH: /tmp/iso_mounter.sock
+  SOCKET_FILE: mounter.sock
