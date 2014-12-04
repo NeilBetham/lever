@@ -11,9 +11,19 @@ CONFIG = YAML.load_file './config.yml'
 # This module handles all the requests for ISO mounts from the socket
 module ISO
   include EM::P::LineProtocol
+
+  def post_init
+    puts 'Received a new connection'
+  end
+
+  def send_line(data)
+    send_data "#{data}\n"
+  end
+
   def receive_line(line)
     command = JSON.parse(line)
     puts command
+    send_line JSON.generate success: true, path: command['path']
   end
 end
 
