@@ -1,6 +1,0 @@
-MAIN:
-  SCAN_DIR: /srv/movies/
-
-ISO_MOUNTER:
-  WORKING_DIR: /tmp/auto_convert/
-  SOCKET_FILE: mounter.sock

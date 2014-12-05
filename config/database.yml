@@ -1,0 +1,9 @@
+production: &production
+  adapter: mysql2
+  database: auto-convert
+  encoding: utf8
+  username: auto-convert
+  password: password
+  host: localhost
+development:
+  <<: *production

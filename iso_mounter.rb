@@ -45,7 +45,7 @@ module ISO
 
   def iso_mount_dir(iso)
     iso_dir = File.basename(iso, File.extname(iso)).tr('^A-Za-z0-9', '')
-    File.absolute_path("#{CONFIG['ISO_MOUNTER']['WORKING_DIR']}#{File::SEPARATOR}#{iso_dir}")
+    File.absolute_path("#{CONFIG['iso_mounter']['working_dir']}#{File::SEPARATOR}#{iso_dir}")
   end
 
   def mount_iso(target_iso, dest_dir)
@@ -59,18 +59,18 @@ module ISO
   end
 
   def unmount_iso(dest_dir)
-    if File.dirname(File.absolute_path(dest_dir)).include?(File.dirname(File.absolute_path(CONFIG['ISO_MOUNTER']['WORKING_DIR'])))
+    if File.dirname(File.absolute_path(dest_dir)).include?(File.dirname(File.absolute_path(CONFIG['iso_mounter']['working_dir'])))
       Process.open Commands.unmount(dest_dir)
     else
-      error "path #{dest_dir} is not in the working directory; not un-mounting"
+      error "path #{dest_dir} is not in the working directory, not un-mounting"
       deferrable = EM::DefaultDeferrable.new
-      deferrable.fail "path #{dest_dir} is not in the working directory; not un-mounting"
+      deferrable.fail "path #{dest_dir} is not in the working directory, not un-mounting"
       deferrable
     end
   end
 
   def cleanup
-    `rm #{CONFIG['ISO_MOUNTER']['WORKING_DIR']}#{File::SEPARATOR}#{CONFIG['ISO_MOUNTER']['SOCKET_FILE']}`
+    `rm #{CONFIG['iso_mounter']['working_dir']}#{File::SEPARATOR}#{CONFIG['iso_mounter']['socket_file']}`
   end
 
   module_function :cleanup
@@ -80,12 +80,12 @@ EventMachine.run do
   Signal.trap('INT')  { ISO.cleanup; EventMachine.stop }
   Signal.trap('TERM') { ISO.cleanup; EventMachine.stop }
 
-  unless File.exist? CONFIG['ISO_MOUNTER']['WORKING_DIR']
+  unless File.exist? CONFIG['iso_mounter']['working_dir']
     info 'Creating working directory'
-    `mkdir #{CONFIG['ISO_MOUNTER']['WORKING_DIR']}`
+    `mkdir #{CONFIG['iso_mounter']['working_dir']}`
     exit 'Failed to make working dir' unless $CHILD_STATUS && $CHILD_STATUS.exitstatus == 0
   end
 
   info 'Starting ISO mounting daemon'
-  EventMachine.start_server "#{CONFIG['ISO_MOUNTER']['WORKING_DIR']}#{File::SEPARATOR}#{CONFIG['ISO_MOUNTER']['SOCKET_FILE']}", ISO
+  EventMachine.start_server "#{CONFIG['iso_mounter']['working_dir']}#{File::SEPARATOR}#{CONFIG['iso_mounter']['socket_file']}", ISO
 end

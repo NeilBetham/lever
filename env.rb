@@ -26,5 +26,8 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 # Load all the libs
 Dir["#{File.dirname(__FILE__)}/lib/**/*.rb"].each { |f| require f }
 
+# Load app components
+Dir["#{File.dirname(__FILE__)}/app/**/*.rb"].each { |f| require f }
+
 # Load config file
-CONFIG = YAML.load_file './config.yml'
+CONFIG = YAML.load_file './config/config.yml'

@@ -2,7 +2,7 @@ module DB
   def init
     ActiveRecord::Base.establish_connection(
     adapter: 'sqlite3',
-    database: 'auto-convert.sqlite3.db'
+    database: './db/auto-convert.sqlite3.db'
     )
 
     ActiveRecord::Schema.define do
@@ -14,6 +14,7 @@ module DB
           table.column :job_state, :string
           table.column :iso, :boolean
           table.column :progress, :decimal
+          table.column :log, :text
         end
       end
 

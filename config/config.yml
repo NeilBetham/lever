@@ -1,0 +1,6 @@
+main:
+  scan_dir: /srv/movies/
+
+iso_mounter:
+  working_dir: /tmp/auto_convert/
+  socket_file: mounter.sock
