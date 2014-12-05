@@ -12,4 +12,8 @@ class AutoConvertApp < Sinatra::Base
   get '/' do
     'Hello World'
   end
+
+  get '/shutdown' do
+    EM.stop
+  end
 end

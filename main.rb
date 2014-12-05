@@ -6,11 +6,21 @@ def init
   run app: AutoConvertApp.new
 end
 
+def scan
+  info 'starting scan'
+
+end
+
 def run(opts)
   EM.run do
+    info 'auto_convert starting'
+
+    Signal.trap('INT')  { EventMachine.stop }
+    Signal.trap('TERM') { EventMachine.stop }
+
     server  = opts[:server] || 'thin'
     host    = opts[:host]   || '0.0.0.0'
-    port    = opts[:port]   || '4567'
+    port    = opts[:port]   || '4568'
     web_app = opts[:app]
 
     # Mount the app at /
@@ -32,6 +42,8 @@ def run(opts)
       Host:   host,
       Port:   port
     })
+
+    EventMachine.add_periodic_timer( 60 ) { scan }
   end
 end
 
