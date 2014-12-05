@@ -6,7 +6,7 @@ module ISO
   include EM::P::LineProtocol
 
   def post_init
-    info 'client connected'
+    debug 'client connected'
   end
 
   def send_line(data)
@@ -28,21 +28,24 @@ module ISO
   def handle_command(command)
     case command['action']
     when 'mount'
-      iso_dir = File.basename(command['path'], File.extname(command['path'])).tr('^A-Za-z0-9', '')
-      iso_full_path = File.absolute_path("#{CONFIG['ISO_MOUNTER']['WORKING_DIR']}#{File::SEPARATOR}#{iso_dir}")
-      debug "mounting iso '#{command['path']}' at '#{iso_full_path}'"
-      mount_iso(command['path'], iso_full_path)
-        .callback { send_line JSON.generate success: true, path: iso_full_path }
+      debug "mounting iso '#{command['path']}' at '#{iso_mount_dir(command['path'])}'"
+      mount_iso(command['path'], iso_mount_dir(command['path']))
+        .callback { send_line JSON.generate success: true, path: iso_mount_dir(command['path']) }
         .errback { send_line JSON.generate success: false }
     when 'unmount'
       debug "unmounting '#{command['path']}'"
       unmount_iso(command['path'])
         .callback { send_line JSON.generate success: true, path: command['path'] }
-        .errback { send_line JSON.generate success: false }
+        .errback { |resp| send_line JSON.generate success: false, message: resp }
     else
       warn "unknown command received: '#{command}'"
       send_line JSON.generate success: false, error: 'Unkown command received'
     end
+  end
+
+  def iso_mount_dir(iso)
+    iso_dir = File.basename(iso, File.extname(iso)).tr('^A-Za-z0-9', '')
+    File.absolute_path("#{CONFIG['ISO_MOUNTER']['WORKING_DIR']}#{File::SEPARATOR}#{iso_dir}")
   end
 
   def mount_iso(target_iso, dest_dir)
@@ -59,7 +62,10 @@ module ISO
     if File.dirname(File.absolute_path(dest_dir)).include?(File.dirname(File.absolute_path(CONFIG['ISO_MOUNTER']['WORKING_DIR'])))
       Process.open Commands.unmount(dest_dir)
     else
-      EM::DefaultDeferrable.new.fail
+      error "path #{dest_dir} is not in the working directory; not un-mounting"
+      deferrable = EM::DefaultDeferrable.new
+      deferrable.fail "path #{dest_dir} is not in the working directory; not un-mounting"
+      deferrable
     end
   end
 
@@ -80,6 +86,6 @@ EventMachine.run do
     exit 'Failed to make working dir' unless $CHILD_STATUS && $CHILD_STATUS.exitstatus == 0
   end
 
-  info 'Starting ISO mounting server'
+  info 'Starting ISO mounting daemon'
   EventMachine.start_server "#{CONFIG['ISO_MOUNTER']['WORKING_DIR']}#{File::SEPARATOR}#{CONFIG['ISO_MOUNTER']['SOCKET_FILE']}", ISO
 end
