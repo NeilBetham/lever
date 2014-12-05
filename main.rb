@@ -1,15 +1,5 @@
 #!/usr/bin/env ruby
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-require 'rubygems'
-require 'eventmachine'
-require 'thin'
-require 'yaml'
-require 'active_record'
-require 'lib/app'
-require 'lib/db'
-
-# Load config file
-CONFIG = YAML.load_file './config.yml'
+require File.expand_path('../env', __FILE__)
 
 def init
   # Start the app

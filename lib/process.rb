@@ -9,6 +9,7 @@ module Process
     end
 
     def unbind
+      debug "sub process exited with status #{get_status.exitstatus}"
       if get_status.exitstatus == 0
         @callback.succeed get_status
       else
@@ -18,6 +19,7 @@ module Process
   end
 
   def open(cmd, recv_handler={})
+    debug "running command #{cmd}"
     process = EM.popen(cmd, ProcessHandler)
     process.recv_handler = recv_handler
     process.callback = EM::DefaultDeferrable.new
