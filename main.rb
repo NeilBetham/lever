@@ -20,7 +20,7 @@ def run(opts)
 
     server  = opts[:server] || 'thin'
     host    = opts[:host]   || '0.0.0.0'
-    port    = opts[:port]   || '4568'
+    port    = opts[:port]   || '4567'
     web_app = opts[:app]
 
     # Mount the app at /
