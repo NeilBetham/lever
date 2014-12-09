@@ -31,7 +31,7 @@ module ISO
       debug "mounting iso '#{command['path']}' at '#{iso_mount_dir(command['path'])}'"
       mount_iso(command['path'], iso_mount_dir(command['path']))
         .callback { send_line JSON.generate success: true, path: iso_mount_dir(command['path']) }
-        .errback { send_line JSON.generate success: false }
+        .errback { |resp| send_line JSON.generate success: false, message: resp }
     when 'unmount'
       debug "unmounting '#{command['path']}'"
       unmount_iso(command['path'])
@@ -49,22 +49,31 @@ module ISO
   end
 
   def mount_iso(target_iso, dest_dir)
-    if !File.exist? dest_dir
-      deferrable = EM::DefaultDeferrable.new
-      mkdir(dest_dir).callback { Process.open(Commands.mount(target_iso, dest_dir)).callback { |resp| deferrable.succeed resp } }
-      deferrable
+    if File.dirname(File.absolute_path(target_iso)).include?(File.absolute_path(CONFIG['main']['scan_dir']))
+      if !File.exist? dest_dir
+        deferrable = EM::DefaultDeferrable.new
+        mkdir(dest_dir).callback { Process.open(Commands.mount(target_iso, dest_dir)).callback { |resp| deferrable.succeed resp } }
+        deferrable
+      else
+        Process.open Commands.mount(target_iso, dest_dir)
+      end
     else
-      Process.open Commands.mount(target_iso, dest_dir)
+      msg = "iso #{target_iso} is not in the scan directory, not mounting"
+      error msg
+      deferrable = EM::DefaultDeferrable.new
+      deferrable.fail msg
+      deferrable
     end
   end
 
   def unmount_iso(dest_dir)
-    if File.dirname(File.absolute_path(dest_dir)).include?(File.dirname(File.absolute_path(CONFIG['main']['working_dir'])))
+    if File.dirname(File.absolute_path(dest_dir)).include?(File.absolute_path(CONFIG['main']['working_dir']))
       Process.open Commands.unmount(dest_dir)
     else
-      error "path #{dest_dir} is not in the working directory, not un-mounting"
+      msg = "path #{dest_dir} is not in the working directory, not un-mounting"
+      error msg
       deferrable = EM::DefaultDeferrable.new
-      deferrable.fail "path #{dest_dir} is not in the working directory, not un-mounting"
+      deferrable.fail msg
       deferrable
     end
   end
@@ -80,11 +89,20 @@ EventMachine.run do
   Signal.trap('INT')  { ISO.cleanup; EventMachine.stop }
   Signal.trap('TERM') { ISO.cleanup; EventMachine.stop }
 
+
+  # Check if working dir exists
   unless File.exist? CONFIG['main']['working_dir']
     info 'Creating working directory'
     `mkdir #{CONFIG['main']['working_dir']}`
-    exit 'Failed to make working dir' unless $CHILD_STATUS && $CHILD_STATUS.exitstatus == 0
   end
+
+  # Exit if no working dir
+  unless File.exist? CONFIG['main']['working_dir']
+    error 'Working direcotry does not exist and was not created'
+    exit 1
+  end
+
+
 
   info 'Starting ISO mounting daemon'
   EventMachine.start_server "#{CONFIG['main']['working_dir']}#{File::SEPARATOR}#{CONFIG['iso_mounter']['socket_file']}", ISO
