@@ -45,7 +45,7 @@ module ISO
 
   def iso_mount_dir(iso)
     iso_dir = File.basename(iso, File.extname(iso)).tr('^A-Za-z0-9', '')
-    File.absolute_path("#{CONFIG['iso_mounter']['working_dir']}#{File::SEPARATOR}#{iso_dir}")
+    File.absolute_path("#{CONFIG['main']['working_dir']}#{File::SEPARATOR}#{iso_dir}")
   end
 
   def mount_iso(target_iso, dest_dir)
@@ -59,7 +59,7 @@ module ISO
   end
 
   def unmount_iso(dest_dir)
-    if File.dirname(File.absolute_path(dest_dir)).include?(File.dirname(File.absolute_path(CONFIG['iso_mounter']['working_dir'])))
+    if File.dirname(File.absolute_path(dest_dir)).include?(File.dirname(File.absolute_path(CONFIG['main']['working_dir'])))
       Process.open Commands.unmount(dest_dir)
     else
       error "path #{dest_dir} is not in the working directory, not un-mounting"
@@ -70,7 +70,7 @@ module ISO
   end
 
   def cleanup
-    `rm #{CONFIG['iso_mounter']['working_dir']}#{File::SEPARATOR}#{CONFIG['iso_mounter']['socket_file']}`
+    `rm #{CONFIG['main']['working_dir']}#{File::SEPARATOR}#{CONFIG['iso_mounter']['socket_file']}`
   end
 
   module_function :cleanup
@@ -80,12 +80,12 @@ EventMachine.run do
   Signal.trap('INT')  { ISO.cleanup; EventMachine.stop }
   Signal.trap('TERM') { ISO.cleanup; EventMachine.stop }
 
-  unless File.exist? CONFIG['iso_mounter']['working_dir']
+  unless File.exist? CONFIG['main']['working_dir']
     info 'Creating working directory'
-    `mkdir #{CONFIG['iso_mounter']['working_dir']}`
+    `mkdir #{CONFIG['main']['working_dir']}`
     exit 'Failed to make working dir' unless $CHILD_STATUS && $CHILD_STATUS.exitstatus == 0
   end
 
   info 'Starting ISO mounting daemon'
-  EventMachine.start_server "#{CONFIG['iso_mounter']['working_dir']}#{File::SEPARATOR}#{CONFIG['iso_mounter']['socket_file']}", ISO
+  EventMachine.start_server "#{CONFIG['main']['working_dir']}#{File::SEPARATOR}#{CONFIG['iso_mounter']['socket_file']}", ISO
 end
