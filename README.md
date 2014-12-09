@@ -6,18 +6,22 @@ This is a little app designed to scan a directory and convert video files as nec
 It expects a directory structure where the video is contained in a folder with its name:
 ```
 DirectoryToScan
-├── Awesome Video
+├── AwesomeVideo
 │   └── VIDEO
-└── Blah Video
+└── BlahVideo
     └── blah.iso
 ```
 
-The videos can be stored in any HandBrake-able format; Lever will try to mount ISOs aswell then HandBrake that dir.
+The videos can be stored in any HandBrake-able format; Lever will try to mount ISOs as well then HandBrake that dir.
+
+Once Lever completes an encode it will move the resulting file to the original directory it scanned
 
 ---
 ### Setup
 1. Edit the config.yml with your specific info
-2. Edit database.yml with your specific info, Lever uses active_record so whatever works there shoudl here too
+  * Configure the handbrake command here; use the tokens %IF and %OF to specify the input and output file paths in the command respectively
+    * Also the %OF should include the desired file extension, eg: ```%OF.mp4```
+2. Edit database.yml with your specific info, Lever uses active_record so whatever works there should here too
 3. Linux requires root privilege to use loop devices for mounting ISOs so start the iso_mounter.rb as root
 4. Start the main.rb which will boot a webserver on whatever port you configured and start the system scanning
 5. Check out the web ui to see what's up and if the system is functioning

@@ -9,6 +9,7 @@ module DB
       unless ActiveRecord::Base.connection.tables.include? 'jobs'
         create_table :jobs do |table|
           table.column :job_name, :string
+          table.column :input_folder, :string
           table.column :input_file_name, :string
           table.column :output_file_name, :string
           table.column :job_state, :string
