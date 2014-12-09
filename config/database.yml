@@ -1,8 +1,8 @@
 production: &production
   adapter: mysql2
-  database: auto-convert
+  database: lever
   encoding: utf8
-  username: auto-convert
+  username: lever
   password: password
   host: localhost
 development:

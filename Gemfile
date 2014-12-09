@@ -19,4 +19,4 @@ gem 'activerecord', '~> 4.1.7', require: 'active_record'
 gem 'haml', '~> 4.0.6'
 
 # Static asset ish
-gem 'sinatra-asset-pipeline', '~> 0.6.0'
+gem 'sinatra-asset-pipeline', '~> 0.6.0', require: 'sinatra/asset_pipeline'

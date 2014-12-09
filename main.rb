@@ -3,7 +3,7 @@ require File.expand_path('../env', __FILE__)
 
 def init
   # Start the app
-  run app: AutoConvertApp.new
+  run app: LeverApp.new
 end
 
 def scan
@@ -13,7 +13,7 @@ end
 
 def run(opts)
   EM.run do
-    info 'auto_convert starting'
+    info 'Lever starting'
 
     Signal.trap('INT')  { EventMachine.stop }
     Signal.trap('TERM') { EventMachine.stop }

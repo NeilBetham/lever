@@ -1,5 +1,5 @@
 # Sinatra app for interacting with daemon
-class AutoConvertApp < Sinatra::Base
+class LeverApp < Sinatra::Base
   register Sinatra::AssetPipeline
 
   configure do
