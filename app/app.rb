@@ -8,6 +8,7 @@ class LeverApp < Sinatra::Base
   end
 
   get '/' do
+    @jobs = Job.where(state: 'queued').concat(Job.where(state: 'encoding'))
     haml :index
   end
 

@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # sinatra for web interface
 gem 'sinatra', '~> 1.4.5'
 
-# eventmachine for running server
+# eventmachine for running the server
 gem 'event_machine', '~> 0.4.1', require: 'eventmachine'
 
 # web server, needs to be event driven
@@ -13,7 +13,7 @@ gem 'thin', '~> 1.6.3'
 gem 'sqlite3', '~> 1.3.10'
 
 # activerecord for db access
-gem 'activerecord', '~> 4.1.7', require: 'active_record'
+gem 'sinatra-activerecord', '~> 2.0.3', require: 'sinatra/activerecord'
 
 # templating engine
 gem 'haml', '~> 4.0.6'

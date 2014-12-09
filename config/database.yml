@@ -1,9 +1,17 @@
-production: &production
-  adapter: mysql2
-  database: lever
-  encoding: utf8
-  username: lever
-  password: password
-  host: localhost
 development:
-  <<: *production
+  adapter: sqlite3
+  database: db/development.sqlite3
+  pool: 5
+  timeout: 5000
+
+test:
+  adapter: sqlite3
+  database: db/test.sqlite3
+  pool: 5
+  timeout: 5000
+
+production:
+  adapter: sqlite3
+  database: db/production.sqlite3
+  pool: 5
+  timeout: 5000
