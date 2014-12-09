@@ -1,0 +1,5 @@
+%ul.job-list
+  - @jobs.each do |job|
+    %li.job
+      %span.name= job.name
+      %span{class: "state-#{job.state}"}= job.state
