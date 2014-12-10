@@ -35,4 +35,4 @@ build/
 
 .sass-cache
 
-./config/config.yml
+config/config.yml
