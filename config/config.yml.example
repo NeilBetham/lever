@@ -1,5 +1,6 @@
 main:
-  scan_dir: /Users/neilbetham/videos/
+  scan_interval: 1.minute
+  scan_dir: /media/videos/
   ignore_if_present:
     - .mkv
     - .mp4

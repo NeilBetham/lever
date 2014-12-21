@@ -43,7 +43,7 @@ def run(opts)
       Port:   port
     })
 
-    EventMachine.add_periodic_timer( 60 ) { scan }
+    EventMachine.add_periodic_timer(eval(CONFIG['main']['scan_interval'])){ scan }
   end
 end
 
