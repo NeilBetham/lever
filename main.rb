@@ -8,6 +8,11 @@ end
 
 def scan
   info 'starting scan'
+  Lever.scan_dir
+end
+
+def run_queued_encode
+  to_encode = Job.queued.first
 
 end
 

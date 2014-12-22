@@ -6,9 +6,10 @@ class CreateJobs < ActiveRecord::Migration
       t.string :input_file_name
       t.string :output_file_name
       t.string :state
-      t.boolean :iso
-      t.decimal :progress
-      t.text :log
+      t.boolean :iso, default: false
+      t.decimal :progress, default: 0.0
+
+      t.timestamps
     end
   end
 end
