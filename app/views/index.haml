@@ -3,3 +3,6 @@
     %li.job
       %span.name= job.name
       %span{class: "state-#{job.state}"}= job.state
+      %span.job-progress
+      - if job.state == 'encoding'
+        %progress{value: job.progress}

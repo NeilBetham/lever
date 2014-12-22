@@ -11,22 +11,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141209043416) do
+ActiveRecord::Schema.define(version: 20141221220827) do
 
   create_table "jobs", force: true do |t|
-    t.string  "name"
-    t.string  "input_folder"
-    t.string  "input_file_name"
-    t.string  "output_file_name"
-    t.string  "state"
-    t.boolean "iso"
-    t.decimal "progress"
-    t.text    "log"
+    t.string   "name"
+    t.string   "input_folder"
+    t.string   "input_file_name"
+    t.string   "output_file_name"
+    t.string   "state"
+    t.boolean  "iso",              default: false
+    t.decimal  "progress",         default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "logs", force: true do |t|
+    t.text     "parts"
+    t.boolean  "complete",   default: false
+    t.integer  "job_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "settings", force: true do |t|
-    t.string "key"
-    t.string "value"
+    t.string   "key"
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end
