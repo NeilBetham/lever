@@ -6,6 +6,7 @@ module Process
 
     def receive_data(data)
       debug "Process received #{data}"
+      return unless @recv_handler.respond_to? :bind
       bound = @recv_handler.bind(@scope)
       bound.call data
     end
@@ -20,8 +21,7 @@ module Process
     end
   end
 
-  def open(cmd, scope, recv_handler={})
-    cmd = "#{cmd} 2>&1"
+  def open(cmd, scope = {}, recv_handler = {})
     debug "running command #{cmd}"
     process = EM.popen(cmd, ProcessHandler)
     process.scope = scope
