@@ -5,4 +5,4 @@
       %span{class: "state-#{job.state}"}= job.state
       %span.job-progress
       - if job.state == 'encoding'
-        %progress{value: job.progress}
+        %progress{value: job.progress, max: 100}

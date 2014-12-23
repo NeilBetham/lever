@@ -5,7 +5,7 @@ module Handbrake
   end
 
   def get_encode_percent(data)
-    unless /^Encoding/ =~ data
+    unless /Encoding/ =~ data
       return nil
     end
 
