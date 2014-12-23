@@ -12,6 +12,11 @@ class LeverApp < Sinatra::Base
     haml :index
   end
 
+  get '/job/:id' do
+    @job = Job.find params[:id]
+    haml :job
+  end
+
   get '/shutdown' do
     EM.stop
   end

@@ -5,7 +5,6 @@ module Process
     attr_accessor :callback
 
     def receive_data(data)
-      debug "Process received #{data}"
       return unless @recv_handler.respond_to? :bind
       bound = @recv_handler.bind(@scope)
       bound.call data

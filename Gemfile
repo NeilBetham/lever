@@ -20,3 +20,9 @@ gem 'haml', '~> 4.0.6'
 
 # Static asset ish
 gem 'sinatra-asset-pipeline', '~> 0.6.0', require: 'sinatra/asset_pipeline'
+
+# Using redis for log caching and ws events
+gem 'redis', '~> 3.2.0'
+gem 'hiredis', '~> 0.5.2'
+gem 'em-synchrony', '~> 1.0.3'
+gem 'msgpack', '~> 0.5.9'

@@ -46,6 +46,10 @@ class Job < ActiveRecord::Base
     end
   end
 
+  def current_log
+    logs.last
+  end
+
   def self.get_job_to_encode
     if where(state: 'encoding').count > 0
       nil
@@ -58,13 +62,8 @@ class Job < ActiveRecord::Base
 
   def handle_command_output(data)
     # add part to log
-    debug "got command output #{data}"
     logs.create if logs.empty?
-    log = logs.last
-    parts = log.parts
-    parts ||= []
-    parts.append(data: data, number: parts.length + 1)
-    log.update(parts: parts)
+    current_log.add_part data
 
     # parse out the progress
     update(progress: Handbrake.get_encode_percent(data))
@@ -72,12 +71,14 @@ class Job < ActiveRecord::Base
 
   def handle_encode_exit(data)
     update(state: 'successful')
-    logs.last.update(complete: true)
+    current_log.update(complete: true)
+    current_log.commit_log
   end
 
   def handle_encode_failed(data)
     update(state: 'failed')
     error "encode failed - #{data}"
-    logs.last.update(complete: true)
+    current_log.update(complete: true)
+    current_log.commit_log
   end
 end
