@@ -12,8 +12,9 @@ def scan
 end
 
 def run_queued_encode
-  to_encode = Job.queued.first
-
+  info 'checking for jobs to encode'
+  to_encode = Job.get_job_to_encode
+  to_encode.encode if !to_encode.nil?
 end
 
 def run(opts)
@@ -48,7 +49,11 @@ def run(opts)
       Port:   port
     })
 
+    scan()
+    run_queued_encode()
+
     EventMachine.add_periodic_timer(eval(CONFIG['main']['scan_interval'])){ scan }
+    EventMachine.add_periodic_timer(eval(CONFIG['main']['scan_interval'])){ run_queued_encode }
   end
 end
 

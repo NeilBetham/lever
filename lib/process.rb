@@ -1,11 +1,13 @@
 module Process
   class ProcessHandler < EventMachine::Connection
+    attr_accessor :scope
     attr_accessor :recv_handler
     attr_accessor :callback
 
     def receive_data(data)
-      return unless @recv_handler.respond_to? :call
-      @recv_handler.call data
+      debug "Process received #{data}"
+      bound = @recv_handler.bind(@scope)
+      bound.call data
     end
 
     def unbind
@@ -18,9 +20,11 @@ module Process
     end
   end
 
-  def open(cmd, recv_handler={})
+  def open(cmd, scope, recv_handler={})
+    cmd = "#{cmd} 2>&1"
     debug "running command #{cmd}"
     process = EM.popen(cmd, ProcessHandler)
+    process.scope = scope
     process.recv_handler = recv_handler
     process.callback = EM::DefaultDeferrable.new
   end
