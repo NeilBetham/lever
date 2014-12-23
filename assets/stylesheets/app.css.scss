@@ -74,6 +74,17 @@ ul {
 
   margin: 0;
   padding: 0;
+
+  li {
+    text-align: middle;
+    vertical-align: center;
+  }
+}
+
+.job-progress {
+  progress {
+    vertical-align: -.4em;
+  }
 }
 
 .btn,

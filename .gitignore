@@ -36,3 +36,5 @@ build/
 .sass-cache
 
 config/config.yml
+
+*.sqlite3
