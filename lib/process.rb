@@ -5,17 +5,21 @@ module Process
     attr_accessor :callback
 
     def receive_data(data)
-      return unless @recv_handler.respond_to? :bind
-      bound = @recv_handler.bind(@scope)
-      bound.call data
+      EM.synchrony do
+        return unless @recv_handler.respond_to? :bind
+        bound = @recv_handler.bind(@scope)
+        bound.call data
+      end
     end
 
     def unbind
-      debug "sub process exited with status #{get_status.exitstatus}"
-      if get_status.exitstatus == 0
-        @callback.succeed get_status
-      else
-        @callback.fail get_status
+      EM.synchrony do
+        debug "sub process exited with status #{get_status.exitstatus}"
+        if get_status.exitstatus == 0
+          @callback.succeed get_status
+        else
+          @callback.fail get_status
+        end
       end
     end
   end

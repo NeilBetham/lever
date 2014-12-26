@@ -18,7 +18,7 @@ def run_queued_encode
 end
 
 def run(opts)
-  EM.run do
+  EM.synchrony do
     info 'Lever starting'
 
     Signal.trap('INT')  { EventMachine.stop }
@@ -31,6 +31,8 @@ def run(opts)
 
     # Mount the app at /
     dispatch = Rack::Builder.app do
+      use Rack::FiberPool
+
       map '/' do
         run web_app
       end
@@ -49,8 +51,7 @@ def run(opts)
       Port:   port
     })
 
-    scan()
-    run_queued_encode()
+    $redis = Redis.new(driver: :synchrony)
 
     EventMachine.add_periodic_timer(eval(CONFIG['main']['scan_interval'])){ scan }
     EventMachine.add_periodic_timer(eval(CONFIG['main']['scan_interval'])){ run_queued_encode }
