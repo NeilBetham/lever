@@ -47,7 +47,7 @@ class Job < ActiveRecord::Base
   end
 
   def current_log
-    logs.last
+    logs.last || Log.new
   end
 
   def self.get_job_to_encode
@@ -72,7 +72,11 @@ class Job < ActiveRecord::Base
   def handle_encode_exit(data)
     update(state: 'successful')
     current_log.update(complete: true)
-    current_log.commit_log
+    EM.next_tick do
+      EM.synchrony do
+        current_log.commit_log
+      end
+    end
   end
 
   def handle_encode_failed(data)

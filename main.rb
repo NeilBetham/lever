@@ -51,8 +51,6 @@ def run(opts)
       Port:   port
     })
 
-    $redis = Redis.new(driver: :synchrony)
-
     EventMachine.add_periodic_timer(eval(CONFIG['main']['scan_interval'])){ scan }
     EventMachine.add_periodic_timer(eval(CONFIG['main']['scan_interval'])){ run_queued_encode }
   end
