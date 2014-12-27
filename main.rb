@@ -13,8 +13,14 @@ end
 
 def run_queued_encode
   info 'checking for jobs to encode'
-  to_encode = Job.get_job_to_encode
-  to_encode.encode if !to_encode.nil?
+  to_encode = Job.next_job_to_encode
+  to_encode.encode unless to_encode.nil?
+end
+
+def check_for_stopped_encodes
+  info 'Checking for stopped encodes'
+  to_encode = Job.encoding.last
+  to_encode unless to_encode.nil?
 end
 
 def run(opts)
@@ -50,6 +56,8 @@ def run(opts)
       Host:   host,
       Port:   port
     })
+
+    check_for_stopped_encodes()
 
     scan()
     run_queued_encode()
