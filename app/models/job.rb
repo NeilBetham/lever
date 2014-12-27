@@ -4,7 +4,6 @@ class Job < ActiveRecord::Base
   validate :validates_only_one_encoding_job
 
   scope :queued, -> { where(state: 'queued') }
-  scope :encoding, -> { where(state: 'encoding') }
 
   def encode
     info "starting encode of #{name}"
@@ -13,7 +12,7 @@ class Job < ActiveRecord::Base
     logs.create if state == 'encoding'
 
     # Return if another job is already encoding
-    return if Job.encoding.count > 1 and Job.encoding.id != id
+    return if !Job.encoding.nil? && Job.encoding.id != id
 
     update(state: 'encoding')
 
@@ -58,12 +57,21 @@ class Job < ActiveRecord::Base
     logs.last || Log.new
   end
 
+  def stop
+    Signal.trap('INT') {}
+    Process.kill 'INT', 0
+  end
+
   def self.next_job_to_encode
-    if where(state: 'encoding').count > 0
+    if Job.encoding
       nil
     else
       queued.first
     end
+  end
+
+  def self.encoding
+    where(state: 'encoding').first
   end
 
   private
@@ -88,13 +96,13 @@ class Job < ActiveRecord::Base
   end
 
   def handle_encode_failed(data)
-    update(state: 'failed')
+    update(state: 'failed') unless state == 'queued'
     error "encode failed - #{data}"
     current_log.update(complete: true)
     current_log.commit_log
   end
 
   def validates_only_one_encoding_job
-    errors.add(:job, 'only one job can be encoding at a time') if Job.encoding.count > 1
+    errors.add(:job, 'only one job can be encoding at a time') if Job.where(state: 'encoding').count > 1
   end
 end

@@ -2,8 +2,6 @@ class Log < ActiveRecord::Base
   belongs_to :job
   serialize :parts
 
-  after_create :reset_redis_key
-
   def add_part(part)
     REDIS.rpush redis_key, { data: part, number: REDIS.llen(redis_key) + 1 }.to_msgpack
   end
@@ -23,9 +21,5 @@ class Log < ActiveRecord::Base
 
   def redis_key
     "job-#{job.id}_log-#{id}_parts"
-  end
-
-  def reset_redis_key
-    REDIS.del redis_key
   end
 end

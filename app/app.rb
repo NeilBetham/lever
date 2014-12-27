@@ -17,11 +17,27 @@ class LeverApp < Sinatra::Base
     haml :job
   end
 
+  get '/job/:id/restart' do
+    @job = Job.find params[:id]
+    redirect '/', 303 && return unless @job
+    @job.stop if !Job.encoding.nil? && Job.encoding.id == @job.id
+    @job.update state: 'queued'
+    redirect '/', 303
+  end
+
+  get '/job/:id/stop' do
+    @job = Job.find params[:id]
+    redirect '/', 303 && return unless @job
+    @job.stop if !Job.encoding.nil? && Job.encoding.id == @job.id
+    @job.update state: 'canceled'
+    redirect '/', 303
+  end
+
   get '/shutdown' do
     EM.next_tick do
       EM.stop
     end
-    'Shutting down...'
+    redirect '/', 303
   end
 
   get '/restart' do
@@ -32,6 +48,6 @@ class LeverApp < Sinatra::Base
     EM.next_tick do
       Kernel.exec "ruby #{$PROGRAM_NAME}"
     end
-    'Restarting...'
+    redirect '/', 303
   end
 end
