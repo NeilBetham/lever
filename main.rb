@@ -20,7 +20,7 @@ end
 def check_for_stopped_encodes
   info 'Checking for stopped encodes'
   to_encode = Job.encoding.last
-  to_encode unless to_encode.nil?
+  to_encode.encode unless to_encode.nil?
 end
 
 def run(opts)

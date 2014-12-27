@@ -25,6 +25,10 @@ class LeverApp < Sinatra::Base
   end
 
   get '/restart' do
+    Signal.trap('INT') {}
+
+    Process.kill 'INT', 0
+
     EM.next_tick do
       Kernel.exec "ruby #{$PROGRAM_NAME}"
     end
