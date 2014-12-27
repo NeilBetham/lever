@@ -6,9 +6,10 @@ module Process
 
     def receive_data(data)
       EM.synchrony do
-        return unless @recv_handler.respond_to? :bind
-        bound = @recv_handler.bind(@scope)
-        bound.call data
+        if @recv_handler.respond_to? :bind
+          bound = @recv_handler.bind(@scope)
+          bound.call data
+        end
       end
     end
 

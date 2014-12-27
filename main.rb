@@ -27,6 +27,15 @@ def run(opts)
   EM.synchrony do
     info 'Lever starting'
 
+    # Check for connection to redis
+    unless REDIS.ping == 'PONG'
+      error 'Can\'t talk to redis'
+      exit 1
+    end
+
+    # Flush redis DB
+    REDIS.flushdb
+
     Signal.trap('INT')  { EventMachine.stop }
     Signal.trap('TERM') { EventMachine.stop }
 
