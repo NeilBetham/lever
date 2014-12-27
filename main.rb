@@ -51,6 +51,9 @@ def run(opts)
       Port:   port
     })
 
+    scan()
+    run_queued_encode()
+
     EventMachine.add_periodic_timer(eval(CONFIG['main']['scan_interval'])){ scan }
     EventMachine.add_periodic_timer(eval(CONFIG['main']['scan_interval'])){ run_queued_encode }
   end

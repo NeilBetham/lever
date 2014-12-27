@@ -3,21 +3,19 @@ class Log < ActiveRecord::Base
   serialize :parts
 
   def add_part(part)
-    current_parts = MessagePack.unpack(REDIS.get(redis_key)) unless REDIS.get(redis_key).nil?
-    current_parts ||= []
-    current_parts.append(data: part, number: current_parts.length + 1)
-    REDIS.set redis_key, current_parts.to_msgpack
+    REDIS.rpush redis_key, { data: part, number: REDIS.llen(redis_key) + 1 }.to_msgpack
   end
 
   def cached_parts
     return parts if complete
 
-    data = REDIS.get(redis_key)
-    MessagePack.unpack(data)
+    data = REDIS.lrange(redis_key, 0, -1)
+    data.map { |part| MessagePack.unpack part }
   end
 
   def commit_log
-    current_parts = MessagePack.unpack REDIS.get(redis_key)
+    data = REDIS.lrange(redis_key, 0, -1)
+    current_parts = data.map { |part| MessagePack.unpack part }
     update(parts: current_parts)
   end
 
