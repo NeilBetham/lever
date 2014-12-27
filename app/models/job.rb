@@ -8,11 +8,11 @@ class Job < ActiveRecord::Base
   def encode
     info "starting encode of #{name}"
 
-    # Encode was restarted, create new log
-    logs.create if state == 'encoding'
-
     # Return if another job is already encoding
     return if !Job.encoding.nil? && Job.encoding.id != id
+
+    # Encode was restarted, create new log
+    logs.create
 
     update(state: 'encoding')
 
