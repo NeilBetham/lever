@@ -18,6 +18,16 @@ class LeverApp < Sinatra::Base
   end
 
   get '/shutdown' do
-    EM.stop
+    EM.next_tick do
+      EM.stop
+    end
+    'Shutting down...'
+  end
+
+  get '/restart' do
+    EM.next_tick do
+      Kernel.exec "ruby #{$PROGRAM_NAME}"
+    end
+    'Restarting...'
   end
 end

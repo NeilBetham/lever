@@ -25,8 +25,9 @@ module Process
   end
 
   def open(cmd, scope = {}, recv_handler = {})
+    cmd = "#{cmd} 2>&1"
     debug "running command #{cmd}"
-    process = EM.popen(cmd, ProcessHandler)
+    process = EM.popen3(cmd, ProcessHandler)
     process.scope = scope
     process.recv_handler = recv_handler
     process.callback = EM::DefaultDeferrable.new
