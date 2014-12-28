@@ -1,0 +1,14 @@
+{
+  "name": "lever",
+  "version": "0.0.0",
+  "homepage": "https://github.com/NeilBetham/lever",
+  "authors": [
+    "Neil Betham <nbetham@me.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "ember": "~1.9.1",
+    "ember-data": "~1.0.0-beta.14"
+  }
+}

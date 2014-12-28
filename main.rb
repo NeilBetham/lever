@@ -53,26 +53,25 @@ def run(opts)
       end
     end
 
-    #Fail out if we are not running something evented
-    unless ['thin', 'hatetepe', 'goliath'].include? server
-      raise "Need an EM webserver, but #{server} isn't"
+    # Fail out if we are not running something evented
+    unless %w(thin hatetepe goliath).include? server
+      fail "Need an EM webserver, but #{server} isn't"
     end
 
     # Start the HTTP interface
-    Rack::Server.start({
+    Rack::Server.start(
       app:    dispatch,
       server: server,
       Host:   host,
       Port:   port
-    })
+    )
 
-    check_for_stopped_encodes()
+    check_for_stopped_encodes
+    scan
+    run_queued_encode
 
-    scan()
-    run_queued_encode()
-
-    EventMachine.add_periodic_timer(eval(CONFIG['main']['scan_interval'])){ scan }
-    EventMachine.add_periodic_timer(eval(CONFIG['main']['scan_interval'])){ run_queued_encode }
+    EventMachine.add_periodic_timer(eval(CONFIG['main']['scan_interval'])) { scan }
+    EventMachine.add_periodic_timer(eval(CONFIG['main']['scan_interval'])) { run_queued_encode }
   end
 end
 

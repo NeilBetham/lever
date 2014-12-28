@@ -1,7 +1,9 @@
 source 'https://rubygems.org'
+ruby '2.1.5'
 
 # sinatra for web interface
 gem 'sinatra', '~> 1.4.5'
+gem 'sinatra-contrib', '~> 1.4.2'
 
 # eventmachine for running the server
 gem 'event_machine', '~> 0.4.1', require: 'eventmachine'
