@@ -6,6 +6,9 @@ class LeverApp < Sinatra::Base
   configure do
     set :public_folder, 'public'
     set :threaded, false
+
+    sprockets.append_path HandlebarsAssets.path
+    HandlebarsAssets::Config.ember = true
   end
 
   get '/' do

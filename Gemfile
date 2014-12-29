@@ -23,6 +23,7 @@ gem 'haml', '~> 4.0.6'
 
 # Static asset ish
 gem 'sinatra-asset-pipeline', '~> 0.6.0', require: 'sinatra/asset_pipeline'
+gem 'handlebars_assets', '~> 0.18'
 
 # Using redis for log caching and ws events
 gem 'redis', '~> 3.2.0'
