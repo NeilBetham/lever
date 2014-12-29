@@ -3,8 +3,9 @@ Lever.Router.map ->
   @route 'shutdown'
 
   @resource 'jobs', ->
-    @route 'log'
-    @route 'restart'
-    @route 'stop'
+    @resource ':job_id', ->
+      @route 'restart'
+      @route 'stop'
+      @route 'log'
 
   @route 'catchall', { path: '*fourohfour' }
