@@ -20,6 +20,7 @@ gem 'sinatra-activerecord', '~> 2.0.3', require: 'sinatra/activerecord'
 
 # templating engine
 gem 'haml', '~> 4.0.6'
+gem 'rabl', '~> 0.11.5'
 
 # Static asset ish
 gem 'sinatra-asset-pipeline', '~> 0.6.0', require: 'sinatra/asset_pipeline'

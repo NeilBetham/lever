@@ -3,17 +3,24 @@ class LeverApp < Sinatra::Base
   register Sinatra::AssetPipeline
   register Sinatra::Namespace
 
+  Rabl.register!
+
   configure do
     set :public_folder, 'public'
     set :threaded, false
 
     sprockets.append_path HandlebarsAssets.path
     HandlebarsAssets::Config.ember = true
+
+    Rabl.configure do |config|
+      config.include_json_root = false
+      config.include_child_root = false
+    end
   end
 
   get '/' do
     @jobs = Job.all
-    haml :index
+    haml :base
   end
 
   get '/job/:id' do
@@ -38,28 +45,28 @@ class LeverApp < Sinatra::Base
   end
 
   namespace '/api' do
-    get 'jobs' do
+    get '/jobs' do
       content_type :json
 
-      @jobs = Jobs.all
-      json @jobs
+      @jobs = Job.all
+      rabl :jobs, format: 'json'
     end
 
-    get 'job/:id' do
+    get '/jobs/:id' do
       content_type :json
 
       @job = Job.find params[:id]
-      json @job
+      rabl :job, format: 'json'
     end
 
-    get 'log/:id' do
+    get '/logs/:id' do
       content_type :json
 
       @log = Log.find params[:id]
-      json @log
+      rabl :log, format: 'json'
     end
 
-    patch 'job/:id/stop' do
+    patch '/jobs/:id/stop' do
       content_type :json
 
       @job = Job.find params[:id]
@@ -69,7 +76,7 @@ class LeverApp < Sinatra::Base
       status 204 && body('')
     end
 
-    patch 'job/:id/restart' do
+    patch '/jobs/:id/restart' do
       content_type :json
 
       @job = Job.find params[:id]
