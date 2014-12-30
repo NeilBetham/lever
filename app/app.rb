@@ -66,24 +66,24 @@ class LeverApp < Sinatra::Base
       rabl :log, format: 'json'
     end
 
-    patch '/jobs/:id/stop' do
+    put '/jobs/:id/stop' do
       content_type :json
 
       @job = Job.find params[:id]
-      status 404 && body('') && return unless @job
+      status 404 && return unless @job
       @job.stop if !Job.encoding.nil? && Job.encoding.id == @job.id
       @job.update state: 'canceled'
-      status 204 && body('')
+      status 204
     end
 
-    patch '/jobs/:id/restart' do
+    put '/jobs/:id/restart' do
       content_type :json
 
       @job = Job.find params[:id]
-      status 404 && body('') && return unless @job
+      status 404 && return unless @job
       @job.stop if !Job.encoding.nil? && Job.encoding.id == @job.id
       @job.update state: 'queued'
-      status 204 && body('')
+      status 204
     end
   end
 
@@ -91,7 +91,7 @@ class LeverApp < Sinatra::Base
     EM.next_tick do
       EM.stop
     end
-    status 204 && body('')
+    status 204
   end
 
   get '/restart' do
@@ -102,6 +102,6 @@ class LeverApp < Sinatra::Base
     EM.next_tick do
       Kernel.exec "ruby #{$PROGRAM_NAME}"
     end
-    status 204 && body('')
+    status 204
   end
 end

@@ -5,8 +5,8 @@
       <span {{bind-attr class=":job-state job.state"}}>{{job.state}}</span>
       <span class="job-progress">{{#if job.encoding}}<progress {{bind-attr value=job.progress}} max="100"></progress>{{/if}}</span>
       <span class="job-controls">
-        <a {{action 'restart' job}} class="btn btn--xs">Restart</a>
-        <a {{action 'stop' job}} class="btn btn--xs">Stop</a>
+        <a {{action 'restartJob' job}} class="btn btn--xs">Restart</a>
+        <a {{action 'stopJob' job}} class="btn btn--xs">Stop</a>
       </span>
     </li>
   {{/each}}
