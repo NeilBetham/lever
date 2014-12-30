@@ -3,7 +3,7 @@ Lever.Router.map ->
   @route 'shutdown'
 
   @resource 'jobs', ->
-    @resource ':job_id', ->
+    @resource 'job', {path: ':job_id'}, ->
       @route 'restart'
       @route 'stop'
       @route 'log'

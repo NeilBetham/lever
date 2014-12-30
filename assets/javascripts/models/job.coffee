@@ -11,3 +11,7 @@ Lever.Job = DS.Model.extend
 
   logs: DS.hasMany 'log',
     async: true
+
+  encoding: (->
+    @get('state') is 'encoding'
+  ).property 'state'
