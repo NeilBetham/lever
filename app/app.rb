@@ -91,7 +91,7 @@ class LeverApp < Sinatra::Base
     EM.next_tick do
       EM.stop
     end
-    redirect '/', 303
+    status 204 && body('')
   end
 
   get '/restart' do
@@ -102,6 +102,6 @@ class LeverApp < Sinatra::Base
     EM.next_tick do
       Kernel.exec "ruby #{$PROGRAM_NAME}"
     end
-    redirect '/', 303
+    status 204 && body('')
   end
 end

@@ -5,8 +5,8 @@
   </span>
   <span class="spacer"></span>
   <span>
-    {{#link-to 'restart' classNames="btn btn--xs"}}Restart{{/link-to}}
-    {{#link-to 'shutdown' classNames="btn btn--xs"}}Shutdown{{/link-to}}
+    <a {{action 'restartServer'}} class="btn btn--xs">Restart</a>
+    <a {{action 'shutdownServer'}} class="btn btn--xs">Shutdown</a>
   </span>
   <span class="ten"></span>
 </header>
