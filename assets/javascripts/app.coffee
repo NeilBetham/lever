@@ -12,7 +12,12 @@
 $(document).ready ->
   console.log 'loaded'
 
-
 Lever = window.Lever = Ember.Application.create
   LOG_TRANSITIONS_INTERNAL: true
   LOG_TRANSITIONS: true
+
+Ember.Application.initializer
+  name: "webSocketInit"
+
+  initialize: (container, application)->
+    container.lookup 'socket:main'

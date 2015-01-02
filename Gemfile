@@ -8,6 +8,7 @@ gem 'sinatra-contrib', '~> 1.4.2'
 # eventmachine for running the server
 gem 'event_machine', '~> 0.4.1', require: 'eventmachine'
 gem 'rack-fiber_pool', '~> 0.9.3'
+gem 'sinatra-websocket', '~> 0.3.1'
 
 # web server, needs to be event driven
 gem 'thin', '~> 1.6.3'

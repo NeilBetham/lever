@@ -3,6 +3,8 @@ class LeverApp < Sinatra::Base
   register Sinatra::AssetPipeline
   register Sinatra::Namespace
 
+  attr_accessor :websockets
+
   Rabl.register!
 
   configure do
@@ -16,32 +18,32 @@ class LeverApp < Sinatra::Base
       config.include_json_root = false
       config.include_child_root = false
     end
+
+    set :websockets, []
   end
 
   get '/' do
-    @jobs = Job.all
     haml :base
   end
 
-  get '/job/:id' do
-    @job = Job.find params[:id]
-    haml :job
-  end
-
-  get '/job/:id/restart' do
-    @job = Job.find params[:id]
-    redirect '/', 303 && return unless @job
-    @job.stop if !Job.encoding.nil? && Job.encoding.id == @job.id
-    @job.update state: 'queued'
-    redirect '/', 303
-  end
-
-  get '/job/:id/stop' do
-    @job = Job.find params[:id]
-    redirect '/', 303 && return unless @job
-    @job.stop if !Job.encoding.nil? && Job.encoding.id == @job.id
-    @job.update state: 'canceled'
-    redirect '/', 303
+  get '/ws' do
+    if !request.websocket?
+      status 101
+    else
+      request.websocket do |ws|
+        ws.onopen do
+          ws.send('ping')
+          settings.websockets << ws
+        end
+        ws.onmessage do |msg|
+          info "websocket received #{msg}"
+        end
+        ws.onclose do
+          info 'websocket closed'
+          settings.websockets.delete(ws) unless settings.websockets.nil?
+        end
+      end
+    end
   end
 
   namespace '/api' do
@@ -103,5 +105,9 @@ class LeverApp < Sinatra::Base
       Kernel.exec "ruby #{$PROGRAM_NAME}"
     end
     status 204
+  end
+
+  def websockets
+    @wesockets || []
   end
 end

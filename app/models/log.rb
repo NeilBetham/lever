@@ -20,6 +20,6 @@ class Log < ActiveRecord::Base
   end
 
   def redis_key
-    "job-#{job.id}_log-#{id}_parts"
+    "log-#{id}_parts"
   end
 end
