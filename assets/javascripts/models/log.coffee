@@ -7,4 +7,5 @@ Lever.Log = DS.Model.extend
   job: DS.belongsTo 'job'
 
   addPart: (part)->
-    console.log part
+    @set('parts', [])if !(@get('parts') instanceof Array)
+    @get('parts').pushObject part

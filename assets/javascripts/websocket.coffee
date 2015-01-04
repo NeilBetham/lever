@@ -54,6 +54,12 @@ Lever.Websocket = Ember.Object.extend
           if model
             delete(data.data.data.id)
             model.setProperties(data.data.data)
+      when "create"
+        @get('store').createRecord data.data.modelName, data.data.data
+      when "destroy"
+        @get('store').find(data.data.modelName, data.data.modelId).then (model)->
+          if model
+            model.deleteRecord();
 
 
 Lever.register "socket:main", Lever.Websocket
