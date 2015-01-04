@@ -27,6 +27,9 @@ def run(opts)
   EM.synchrony do
     info 'Lever starting'
 
+    web_app = opts[:app]
+    event_channel = EventMachine::Channel.new
+
     # Check for connection to redis
     unless REDIS.ping == 'PONG'
       error 'Can\'t talk to redis'
@@ -35,6 +38,16 @@ def run(opts)
 
     # Flush redis DB
     REDIS.flushdb
+
+    # Setup websocket channel
+    LeverApp.set :event_channel, event_channel
+
+    # Handle channel messages
+    event_channel.subscribe do |msg|
+      web_app.settings.websockets.each do |socket|
+        socket.send msg
+      end
+    end
 
     Signal.trap('INT')  { EventMachine.stop }
     Signal.trap('TERM') { EventMachine.stop }

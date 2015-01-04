@@ -1,8 +1,20 @@
 class Log < ActiveRecord::Base
+  include Streamable
+
   belongs_to :job
   serialize :parts
 
   def add_part(part)
+    msg = {
+      type: "log:addpart",
+      part: {
+        logId: id,
+        number: REDIS.llen(redis_key) + 1,
+        line: part
+      }
+    }
+
+    LeverApp.settings.event_channel.push msg.to_json
     REDIS.rpush redis_key, { data: part, number: REDIS.llen(redis_key) + 1 }.to_msgpack
   end
 

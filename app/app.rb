@@ -35,9 +35,6 @@ class LeverApp < Sinatra::Base
           ws.send('ping')
           settings.websockets << ws
         end
-        ws.onmessage do |msg|
-          info "websocket received #{msg}"
-        end
         ws.onclose do
           info 'websocket closed'
           settings.websockets.delete(ws) unless settings.websockets.nil?

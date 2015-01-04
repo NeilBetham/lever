@@ -6,10 +6,6 @@ Lever.JobsIndexController = Ember.ArrayController.extend
         type: 'PUT'
       ).then (response)->
         console.log 'job restart triggered'
-        setTimeout ->
-          console.log 'reloading job'
-          job.reload()
-        , 1000
 
     stopJob: (job)->
       Ember.$.ajax(
@@ -17,7 +13,3 @@ Lever.JobsIndexController = Ember.ArrayController.extend
         type: 'PUT'
       ).then (response)->
         console.log 'job restart triggered'
-        setTimeout ->
-          console.log 'reloading job'
-          job.reload()
-        , 1000

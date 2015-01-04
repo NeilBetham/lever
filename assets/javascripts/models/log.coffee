@@ -5,3 +5,6 @@ Lever.Log = DS.Model.extend
   updated_at: DS.attr 'date'
 
   job: DS.belongsTo 'job'
+
+  addPart: (part)->
+    console.log part

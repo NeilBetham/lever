@@ -1,4 +1,6 @@
 class Job < ActiveRecord::Base
+  include Streamable
+
   JOB_STATES = %i(queued encoding failed successful canceled)
   has_many :logs
   validate :validates_only_one_encoding_job
@@ -82,7 +84,8 @@ class Job < ActiveRecord::Base
     current_log.add_part data
 
     # parse out the progress
-    update(progress: Handbrake.get_encode_percent(data))
+    progress = Handbrake.get_encode_percent(data)
+    update(progress: progress) unless progress.nil?
   end
 
   def handle_encode_exit(data)
