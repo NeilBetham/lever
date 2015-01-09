@@ -13,13 +13,13 @@ class Job < ActiveRecord::Base
     # Return if another job is already encoding
     return if !Job.encoding.nil? && Job.encoding.id != id
 
-    # Encode was restarted, create new log
+    # Log for every encode attempt
     logs.create
 
     update(state: 'encoding')
 
     if iso
-      ISO.mount(input_folder)
+      ISO.mount(input_file_name)
         .errback { |data| handle_encode_failed(data) }
         .callback do |data|
           debug "mount command data: #{data}"
@@ -28,7 +28,7 @@ class Job < ActiveRecord::Base
           command = Handbrake.build_command(
             CONFIG['main']['handbrake_base_command'],
             mounted_iso,
-            File.join(CONFIG['main']['working_dir'], output_file_name)
+            output_file_name
           )
 
           Process.open(command, self, Job.instance_method(:handle_command_output))
@@ -46,7 +46,7 @@ class Job < ActiveRecord::Base
       command = Handbrake.build_command(
         CONFIG['main']['handbrake_base_command'],
         input_folder,
-        File.join(CONFIG['main']['working_dir'], output_file_name)
+        output_file_name
       )
 
       Process.open(command, self, Job.instance_method(:handle_command_output))

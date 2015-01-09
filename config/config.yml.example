@@ -4,6 +4,10 @@ main:
   ignore_if_present:
     - .mkv
     - .mp4
+  allowed_input_files:
+    - .avi
+    - .m4v
+    - .iso
   working_dir: /tmp/lever/
   handbrake_base_command: HandBrakeCLI -i "%IF" --main-feature -o "%OF" -m -E copy --audio-copy-mask ac3,dts,dtshd --audio-fallback ffac3 -e x264 -s "1,2,3,4,5,6"
 
