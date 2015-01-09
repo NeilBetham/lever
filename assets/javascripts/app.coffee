@@ -3,6 +3,7 @@
 #= require ../../vendor/assets/bower_components/handlebars/handlebars.js
 #= require ../../vendor/assets/bower_components/ember/ember.js
 #= require ../../vendor/assets/bower_components/ember-data/ember-data.min.js
+#= require ../../vendor/assets/bower_components/humps/humps.js
 #= require_tree ../../vendor/assets/javascripts
 #= require_tree ./templates
 #= require_self

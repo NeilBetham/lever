@@ -67,7 +67,7 @@ module Lever
 
     # Schedule the remaining directories for encoding
     dirs.each do |dir|
-      next if Job.where(name: dir.input_folder).count > 0
+      next if Job.where(name: dir.dir).count > 0
       next unless dir.encodeable?
 
       Job.create(

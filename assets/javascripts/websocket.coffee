@@ -21,7 +21,7 @@ Lever.Websocket = Ember.Object.extend
       return
 
     try
-      data = JSON.parse message.data
+      data = humps.camelizeKeys JSON.parse message.data
     catch
       console.error 'Failed to parse message'
 
