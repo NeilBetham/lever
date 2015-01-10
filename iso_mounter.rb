@@ -19,6 +19,11 @@ module ISO
     Process.open Commands.mkdir(dir)
   end
 
+  def rm(dir)
+    debug "rm: #{dir}"
+    Process.open Commands.rm(dir)
+  end
+
   def receive_line(line)
     command = JSON.parse(line)
     info "recevied command: #{command}"
@@ -67,15 +72,21 @@ module ISO
   end
 
   def unmount_iso(dest_dir)
+    deferrable = EM::DefaultDeferrable.new
     if File.dirname(File.absolute_path(dest_dir)).include?(File.absolute_path(CONFIG['main']['working_dir']))
-      Process.open Commands.unmount(dest_dir)
+      Process.open(Commands.unmount(dest_dir))
+        .errback { |error| deferrable.fail error }
+        .callback do
+          Process.open(Commands.rm(dest_dir))
+            .errback { |resp| deferrable.fail resp }
+            .callback { |resp| deferrable.succeed resp }
+        end
     else
-      msg = "path #{dest_dir} is not in the working directory, not un-mounting"
+      msg = "path #{dest_dir} is not in the working directory, refusing un-mounting"
       error msg
-      deferrable = EM::DefaultDeferrable.new
       deferrable.fail msg
-      deferrable
     end
+    deferrable
   end
 
   def cleanup

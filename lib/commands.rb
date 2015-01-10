@@ -17,5 +17,14 @@ module Commands
     "mkdir #{dir}"
   end
 
-  module_function :mount, :unmount, :mkdir
+  def rm(dir)
+    if File.directory? dir
+      "rm -r #{dir}"
+    else
+      "rm #{dir}"
+    end
+
+  end
+
+  module_function :mount, :unmount, :mkdir, :rm
 end

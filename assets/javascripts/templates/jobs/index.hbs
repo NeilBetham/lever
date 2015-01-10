@@ -9,5 +9,7 @@
         <a {{action 'stopJob' job}} class="btn btn--xs">Stop</a>
       </span>
     </li>
+  {{else}}
+    <li><h2>No encodes have been queued</h2></li>
   {{/each}}
 </ul>

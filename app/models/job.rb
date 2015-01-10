@@ -19,9 +19,11 @@ class Job < ActiveRecord::Base
     update(state: 'encoding')
 
     if iso
+      # Mount the ISO first then run the encode
       ISO.mount(input_file_name)
         .errback { |data| handle_encode_failed(data) }
         .callback do |data|
+          # ISO mounted, start encode
           debug "mount command data: #{data}"
           mounted_iso = data['path']
 
@@ -43,6 +45,7 @@ class Job < ActiveRecord::Base
             end
         end
     else
+      # Go straight to running the encode
       command = Handbrake.build_command(
         CONFIG['main']['handbrake_base_command'],
         input_folder,
