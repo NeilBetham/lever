@@ -76,7 +76,8 @@ def run(opts)
       app:    dispatch,
       server: server,
       Host:   host,
-      Port:   port
+      Port:   port,
+      signals: false
     )
 
     check_for_stopped_encodes
