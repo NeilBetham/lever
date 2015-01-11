@@ -1,4 +1,5 @@
-Log = ->
+# Props to travis ci for the awesome log renderer
+Log = window.Log = ->
   @autoCloseFold = true
   @listeners = []
   @renderer = new Log.Renderer

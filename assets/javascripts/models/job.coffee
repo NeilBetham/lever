@@ -12,6 +12,14 @@ Lever.Job = DS.Model.extend
   logs: DS.hasMany 'log',
     async: true
 
+  currentLogUpdater: (->
+    @get('logs').then (data)=>
+      @set 'currentLog', data.get('lastObject')
+  ).observes 'logs.@each'
+
+  currentLog: null
+
+
   encoding: (->
     @get('state') is 'encoding'
   ).property 'state'

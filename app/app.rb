@@ -5,7 +5,15 @@ class LeverApp < Sinatra::Base
 
   attr_accessor :websockets
 
-  Rabl.register!
+  helpers do
+    # ActiveModel::Serializer helper
+    def serialize(object, options = {})
+      klass = options[:serializer] || object.active_model_serializer
+      options[:scope] ||= nil
+      serializer = klass.new(object, options)
+      serializer.as_json
+    end
+  end
 
   configure do
     set :public_folder, 'public'
@@ -14,9 +22,9 @@ class LeverApp < Sinatra::Base
     sprockets.append_path HandlebarsAssets.path
     HandlebarsAssets::Config.ember = true
 
-    Rabl.configure do |config|
-      config.include_json_root = false
-      config.include_child_root = false
+    ActiveModel::Serializer.setup do |config|
+      config.embed = :ids
+      config.embed_in_root = true
     end
 
     set :websockets, []
@@ -48,21 +56,22 @@ class LeverApp < Sinatra::Base
       content_type :json
 
       @jobs = Job.all
-      rabl :jobs, format: 'json'
+      json ActiveModel::ArraySerializer.new(@jobs, each_serializer: JobSerializer, root: 'jobs').as_json
+      #json serialize(@jobs, serializer: JobSerializer)
     end
 
     get '/jobs/:id' do
       content_type :json
 
       @job = Job.find params[:id]
-      rabl :job, format: 'json'
+      json serialize(@job, serializer: JobSerializer)
     end
 
     get '/logs/:id' do
       content_type :json
 
       @log = Log.find params[:id]
-      rabl :log, format: 'json'
+      json serialize(@log, serializer: LogSerializer)
     end
 
     put '/jobs/:id/stop' do

@@ -21,4 +21,5 @@ Ember.Application.initializer
   name: "webSocketInit"
 
   initialize: (container, application)->
+    # Lookup the websocket handler to get the connection started
     container.lookup 'socket:main'

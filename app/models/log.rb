@@ -1,6 +1,8 @@
 class Log < ActiveRecord::Base
   include Streamable
 
+  before_create :init_properties
+
   belongs_to :job
   serialize :parts
 
@@ -33,5 +35,11 @@ class Log < ActiveRecord::Base
 
   def redis_key
     "log-#{id}_parts"
+  end
+
+  private
+
+  def init_properties
+    parts = []
   end
 end
