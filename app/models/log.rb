@@ -8,16 +8,16 @@ class Log < ActiveRecord::Base
 
   def add_part(part)
     msg = {
-      type: "log:addpart",
+      type: 'log:addpart',
       part: {
         logId: id,
-        number: REDIS.llen(redis_key) + 1,
-        line: part
+        index: REDIS.llen(redis_key) + 1,
+        content: part
       }
     }
 
     LeverApp.settings.event_channel.push msg.to_json
-    REDIS.rpush redis_key, { data: part, number: REDIS.llen(redis_key) + 1 }.to_msgpack
+    REDIS.rpush redis_key, { content: part, index: REDIS.llen(redis_key) + 1 }.to_msgpack
   end
 
   def cached_parts

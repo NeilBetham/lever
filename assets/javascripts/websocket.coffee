@@ -43,7 +43,7 @@ Lever.Websocket = Ember.Object.extend
           if log
             log.addPart
               index: data.part.number
-              line: data.part.line
+              content: data.part.line
 
 
   handleModelMessage: (data)->
