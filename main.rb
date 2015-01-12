@@ -7,14 +7,18 @@ def init
 end
 
 def scan
-  info 'starting scan'
-  Lever.scan_dir
+  EM.synchrony do
+    info 'starting scan'
+    Lever.scan_dir
+  end
 end
 
 def run_queued_encode
-  info 'checking for jobs to encode'
-  to_encode = Job.next_job_to_encode
-  to_encode.encode unless to_encode.nil?
+  EM.synchrony do
+    info 'checking for jobs to encode'
+    to_encode = Job.next_job_to_encode
+    to_encode.encode unless to_encode.nil?
+  end
 end
 
 def check_for_stopped_encodes
