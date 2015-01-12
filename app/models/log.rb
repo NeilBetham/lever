@@ -40,6 +40,6 @@ class Log < ActiveRecord::Base
   private
 
   def init_properties
-    parts = []
+    self.parts = []
   end
 end

@@ -14,7 +14,7 @@ Log.extend = (one, other) ->
   one
 
 Log.extend Log,
-  DEBUG: true
+  DEBUG: false
   SLICE: 500
   TIMEOUT: 25
   FOLD: /fold:(start|end):([\w_\-\.]+)/

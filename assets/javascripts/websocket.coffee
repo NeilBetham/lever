@@ -42,8 +42,8 @@ Lever.Websocket = Ember.Object.extend
         @get('store').find('log', data.part.logId).then (log)->
           if log
             log.addPart
-              index: data.part.number
-              content: data.part.line
+              index: data.part.index
+              content: data.part.content
 
 
   handleModelMessage: (data)->

@@ -38,7 +38,6 @@ Lever.LogView = Ember.View.extend
 
   handleLogUpdates: ->
     if log = @get('log')
-      console.log @get 'log.id'
       parts = log.get 'parts'
       parts.addArrayObserver(@, didChange: 'partsDidChange', willChange: 'noop')
       parts = parts.slice(0)
@@ -49,7 +48,6 @@ Lever.LogView = Ember.View.extend
   partsDidChange: (parts, start, _, added)->
     for part, i in parts.slice(start, start + added)
       # console.log "limit in log view: #{@get('limited')}"
-      @logEngine.set(part.number, part.content)
+      @logEngine.set(part.index, part.content)
 
   noop: ->
-    console.log 'noop'
