@@ -31,6 +31,3 @@ Dir["#{File.dirname(__FILE__)}/app/**/*.rb"].each { |f| require f }
 
 # Load config file
 CONFIG = YAML.load_file './config/config.yml'
-
-# Setup Redis connection
-REDIS = Redis.new(driver: :synchrony)

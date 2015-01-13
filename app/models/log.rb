@@ -13,13 +13,11 @@ class Log < ActiveRecord::Base
   def parts
     return read_attribute(:parts) if complete
 
-    data = REDIS.lrange(redis_key, 0, -1)
-    data.map { |part| MessagePack.unpack part }
+    EM::Synchrony.sync($REDIS.lrange(redis_key, 0, -1)).map { |part| MessagePack.unpack part }
   end
 
   def add_part(part)
-    part_index = REDIS.llen(redis_key)
-    part_index = part_index.is_a?(Numeric) ? part_index : part_index.length # llen sometimes returns the array at the key
+    part_index = EM::Synchrony.sync $REDIS.llen(redis_key)
 
     msg = {
       type: 'log:addpart',
@@ -31,11 +29,11 @@ class Log < ActiveRecord::Base
     }
 
     LeverApp.settings.event_channel.push msg.to_json
-    REDIS.rpush redis_key, { content: part, index: part_index + 1 }.to_msgpack
+    EM::Synchrony.sync $REDIS.rpush redis_key, { content: part, index: part_index + 1 }.to_msgpack
   end
 
   def commit_log
-    data = REDIS.lrange(redis_key, 0, -1)
+    data = EM::Synchrony.sync $REDIS.lrange(redis_key, 0, -1)
     current_parts = data.map { |part| MessagePack.unpack part }
     update(parts: current_parts)
   end
