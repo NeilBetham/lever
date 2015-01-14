@@ -45,23 +45,20 @@ Lever.Websocket = Ember.Object.extend
               index: data.part.index
               content: data.part.content
 
-
   handleModelMessage: (data)->
+    store = @get 'store'
     switch /(?:\:)\w+/g.exec(data["type"])[0].slice(1)
       when "update"
         # {"type":"model:update", "data":{"modelName":"job", "modelId":1234, "data":{"param":"value"}}}
-        @get('store').find(data.data.modelName, data.data.modelId).then (model)->
-          if model
-            delete(data.data.data.id)
-            model.setProperties(data.data.data)
+        store.push data.data.modelName, store.normalize data.data.modelName, data.data.data
       when "create"
-        @get('store').createRecord data.data.modelName, data.data.data
+        store.push data.data.modelName, store.normalize data.data.modelName, data.data.data
       when "destroy"
-        @get('store').find(data.data.modelName, data.data.modelId).then (model)->
+        store.find(data.data.modelName, data.data.modelId).then (model)->
           if model
             model.deleteRecord();
       when "reload"
-        @get('store').find(data.data.modelName, data.data.modelId).then (model)->
+        store.find(data.data.modelName, data.data.modelId).then (model)->
           if model
             model.reload();
 
