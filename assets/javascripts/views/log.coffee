@@ -11,30 +11,23 @@ Lever.LogView = Ember.View.extend
     @teardownLogEngine()
 
   setupLogEngine: ->
-    console.log 'setting up log engine'
     @set 'logEngine', window.Log.create()
     @handleLogUpdates()
 
   logWillChange: (->
-    console.log 'log will change'
     @teardownLogEngine()
   ).observesBefore 'log'
 
   logDidChange: (->
-    console.log 'log did change'
     if @get 'log'
       @setupLogEngine()
       @rerender() if @get('_state') == 'inDOM'
-    else
-      console.log 'log is null'
   ).observes 'log'
 
   teardownLogEngine: ->
     if log = @get('log')
       parts = log.get 'parts'
       parts.removeArrayObserver(@, didChange: 'partsDidChange', willChange: 'noop')
-    else
-      console.log 'log is null'
 
   handleLogUpdates: ->
     if log = @get('log')
@@ -42,8 +35,6 @@ Lever.LogView = Ember.View.extend
       parts.addArrayObserver(@, didChange: 'partsDidChange', willChange: 'noop')
       parts = parts.slice(0)
       @partsDidChange(parts, 0, null, parts.length)
-    else
-      console.log 'log is null'
 
   partsDidChange: (parts, start, _, added)->
     for part, i in parts.slice(start, start + added)
