@@ -96,19 +96,19 @@ class Job < ActiveRecord::Base
 
   def handle_encode_exit(data)
     update(state: 'successful')
-    current_log.update(complete: true)
-    EM.next_tick do
-      EM.synchrony do
-        current_log.commit_log
-      end
+    @log_handler.sync.callback do
+      current_log.update(complete: true)
+      current_log.commit_log
     end
   end
 
   def handle_encode_failed(data)
     update(state: 'failed') unless state == 'queued'
     error "encode failed - #{data}"
-    current_log.update(complete: true)
-    current_log.commit_log
+    @log_handler.sync.callback do
+      current_log.update(complete: true)
+      current_log.commit_log
+    end
   end
 
   def validates_only_one_encoding_job
