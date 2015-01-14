@@ -2,6 +2,7 @@ class Log < ActiveRecord::Base
   include Streamable
 
   before_create :init_properties
+  after_save :reload_job, on: :create
 
   belongs_to :job
   serialize :parts
@@ -46,5 +47,9 @@ class Log < ActiveRecord::Base
 
   def init_properties
     self.parts = []
+  end
+
+  def reload_job
+    job.trigger_reload
   end
 end

@@ -57,7 +57,6 @@ class LeverApp < Sinatra::Base
 
       @jobs = Job.all
       json ActiveModel::ArraySerializer.new(@jobs, each_serializer: JobSerializer, root: 'jobs').as_json
-      #json serialize(@jobs, serializer: JobSerializer)
     end
 
     get '/jobs/:id' do

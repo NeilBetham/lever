@@ -60,6 +60,10 @@ Lever.Websocket = Ember.Object.extend
         @get('store').find(data.data.modelName, data.data.modelId).then (model)->
           if model
             model.deleteRecord();
+      when "reload"
+        @get('store').find(data.data.modelName, data.data.modelId).then (model)->
+          if model
+            model.reload();
 
 
 Lever.register "socket:main", Lever.Websocket

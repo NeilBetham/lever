@@ -11,17 +11,14 @@ Lever.LogView = Ember.View.extend
     @teardownLogEngine()
 
   setupLogEngine: ->
-    console.log 'setting up log engine'
     @set 'logEngine', window.Log.create()
     @handleLogUpdates()
 
   logWillChange: (->
-    console.log 'log changing...'
     @teardownLogEngine()
   ).observesBefore 'log'
 
   logDidChange: (->
-    console.log 'log changed'
     if @get 'log'
       @setupLogEngine()
       @rerender() if @get('_state') == 'inDOM'

@@ -7,6 +7,18 @@ class Job < ActiveRecord::Base
 
   scope :queued, -> { where(state: 'queued') }
 
+  def self.next_job_to_encode
+    if Job.encoding
+      nil
+    else
+      queued.first
+    end
+  end
+
+  def self.encoding
+    where(state: 'encoding').first
+  end
+
   def encode
     info "starting encode of #{name}"
 
@@ -15,6 +27,7 @@ class Job < ActiveRecord::Base
 
     # Log for every encode attempt
     logs.create
+
 
     # Update job state
     update(state: 'encoding')
@@ -71,16 +84,16 @@ class Job < ActiveRecord::Base
     Process.kill 'INT', 0
   end
 
-  def self.next_job_to_encode
-    if Job.encoding
-      nil
-    else
-      queued.first
-    end
-  end
+  def trigger_reload
+    msg = {
+      type: "model:reload",
+      data: {
+        modelName: self.class.name.downcase,
+        modelId: id,
+      }
+    }
 
-  def self.encoding
-    where(state: 'encoding').first
+    LeverApp.settings.event_channel.push msg.to_json
   end
 
   private
