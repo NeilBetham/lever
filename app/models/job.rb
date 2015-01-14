@@ -16,7 +16,11 @@ class Job < ActiveRecord::Base
     # Log for every encode attempt
     logs.create
 
+    # Update job state
     update(state: 'encoding')
+
+    # Setup sequential log handler
+    @log_handler = Lever::LogHandler.new current_log
 
     if iso
       # Mount the ISO first then run the encode
@@ -82,9 +86,8 @@ class Job < ActiveRecord::Base
   private
 
   def handle_command_output(data)
-    # add part to log
-    logs.create if logs.empty?
-    current_log.add_part data
+    # add part to log handler
+    @log_handler.push_part data
 
     # parse out the progress
     progress = Handbrake.get_encode_percent(data)
