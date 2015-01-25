@@ -1,5 +1,5 @@
 Lever.LogView = Ember.View.extend
-  templateName: 'job/log'
+  template: Ember.Handlebars.compile '<div id="log-container"><pre id="log"></pre></div>'
   log: null
   logEngine: null
 

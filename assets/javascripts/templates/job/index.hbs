@@ -1,12 +1,15 @@
-<ul>
-  <li><span>Name - </span>  {{name}}</li>
-  <li><span>Input Folder - </span>  {{inputFolder}}</li>
-  <li><span>Input File - </span>  {{inputFileName}}</li>
-  <li><span>Output File - </span>  {{outputFileName}}</li>
-  <li><span>State - </span>  {{state}}</li>
-  <li><span>Iso? - </span>  {{iso}}</li>
-  <li><span>Progress - </span>  {{progress}}%</li>
-  <li><span>Added - </span>  {{created_at}}</li>
-</ul>
-
-{{view "log" log=currentLog}}
+<div class="well">
+  <ul>
+    <li><span>Name - </span>  {{name}}</li>
+    <li><span>Input Folder - </span>  {{inputFolder}}</li>
+    <li><span>Input File - </span>  {{inputFileName}}</li>
+    <li><span>Output File - </span>  {{outputFileName}}</li>
+    <li><span>State - </span>  {{state}}</li>
+    <li><span>Iso? - </span>  {{iso}}</li>
+    <li><span>Progress - </span>  {{progress}}%</li>
+    <li><span>Added - </span>  {{created_at}}</li>
+  </ul>
+</div>
+<div class='well'>
+  {{view "log" log=currentLog}}
+</div>

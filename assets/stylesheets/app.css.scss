@@ -1,71 +1,85 @@
 /*
  *= require fonts
+ *= require ionicons
  */
 
+$brand_color: #51bbfe;
+$brand_grey: rgba(255, 255, 255, .8);
+$log_background_color: #444;
+$brand_white: #EEE;
 
 * {
   font-family: inherit;
+  color: inherit;
 }
 
 body {
   font-family: Roboto, Helvetica, Arial;
+  font-size: 1.2em;
   font-weight: 300;
 
+  color: #000;
+  background-color: #eaeaea;
+
   margin: 0;
+
+  vertical-align: middle;
 }
 
-header {
+#root-link {
   position: fixed;
 
+  padding: .2em;
+
+  margin-left: .3em;
+
+  background-color: #5896e6;
+
+  font-size: 2em;
   top: 0;
+  left: 0;
+}
 
-  width: 100%;
-
+#socket-status {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  width: 1em;
+  height: 1em;
   font-size: 1.3em;
+  padding: .5em;
 
-  border-bottom: 1px solid #AAA;
+  text-align: center;
 
-  display: -webkit-flex;
-  -webkit-flex-flow: row;
+  &.connected {
+    background-color: #5dd39e;
+  }
 
-  display: flex;
-  flex-flow: row;
-
-  span {
-    -webkit-align-self: center;
-    align-self: center;
-
-    height: 100%;
-
-    &.spacer {
-      margin: 0 auto;
-    }
-
-    &.ten {
-      width: 10px;
-    }
-
-    &.big {
-      font-size: 2em;
-    }
+  &.disconnected {
+    background-color: #b24c63;
   }
 }
 
 main {
   margin: 8px;
-  margin-top: 58px;
+  margin-top: 70px;
+}
+
+.well {
+  margin: 1em;
+  padding: 1em;
 }
 
 a {
   text-decoration: none;
-  color: #000000;
+  color: #000;
 
   &:visited {
-    color: #000000;
+    color: #000;
   }
 
   &:hover {
-    color: #7FDBFF;
+    color: $brand_color;
   }
 }
 
@@ -77,14 +91,14 @@ ul {
 
   li {
     text-align: middle;
-    vertical-align: center;
+    vertical-align: middle;
     margin: .5em 0;
-  }
-}
+    line-height: 2em;
 
-.job-progress {
-  progress {
-    vertical-align: -.4em;
+    span {
+      display: inline-block;
+      height: 100%;
+    }
   }
 }
 
@@ -92,36 +106,123 @@ h1, h2, h3, h4, h4, h5, h6 {
   font-weight: 300;
 }
 
+progress {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  padding: .1em;
+  border: 1px solid #000;
+  margin: .05em;
+  margin-top: 2px;
+
+  height: 1em;
+
+  border-radius: .2em;
+
+  display: inline-block;
+
+  &::-webkit-progress-value {
+    border-radius: .08em;
+    background-color: $brand_color;
+  }
+
+  &::-webkit-progress-bar {
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  &::-moz-progress-bar {
+    border-radius: .01em;
+    background-color: $brand_color;
+  }
+}
+
 .btn,
 .btn:link,
 .btn:visited {
-  border-radius: .3em;
-  border-style: solid;
-  border-width: 1px;
-  color: #111;
-  display: inline-block;
-  font-family: avenir, helvetica, arial, sans-serif;
+  color: #000;
+  background-color: $brand_color;
+  display: inline;
+  font-family: inherit;
   letter-spacing: .15em;
   padding: 1em .75em;
   text-decoration: none;
   text-transform: uppercase;
-  transition: color .4s, background-color .4s, border .4s;
+  transition: background-color .4s;
 }
 
 .btn:hover,
 .btn:focus {
-  color: #7FDBFF;
-  border: 1px solid #7FDBFF;
-  transition: background-color .3s, color .3s, border .3s;
+  color: #000;
+  background-color: lighten($brand_color, 10%);
+  transition: background-color .3s;
 }
 
 .btn:active {
-  color: #0074D9;
-  border: 1px solid #0074D9;
-  transition: background-color .3s, color .3s, border .3s;
+  color: #000;
+  background-color: darken($brand_color, 25%);
+  transition: background-color .3s;
 }
 
 .btn--xs { font-size: 10px; }
 .btn--s { font-size: 12px; }
 .btn--m { font-size: 14px; }
 .btn--l { font-size: 20px; border-radius: .25em!important; }
+
+
+
+pre#log {
+  min-height: 12px;
+  margin-top: 25px;
+  margin-top: 1em;
+  padding: 15px 0;
+  color: #000;
+  font-family: monospace;
+  font-size: .8em;
+  line-height: 1.2em;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  border-radius: 4px;
+  counter-reset: line-numbering;
+
+  background-color: $log_background_color;
+  color: $brand_white;
+
+  .cut {
+    padding: 20px 15px 0 55px
+  }
+
+  p {
+    padding: 0 15px 0 55px;
+    margin: 0;
+    min-height: 16px;
+
+    &:nth-child(odd) {
+      background-color: lighten($log_background_color, 2%);
+    }
+
+    &:hover {
+      background-color: lighten($log_background_color, 10%);
+    }
+
+    a {
+      display: inline-block;
+      text-align: right;
+      min-width: 40px;
+      margin-left: -33px;
+      cursor: pointer;
+      text-decoration: none;
+      color: darken($brand_white, 50%);
+
+      &:hover {
+        color: $brand_white;
+      }
+
+      &::before {
+        content: counter(line-numbering);
+        counter-increment: line-numbering;
+        padding-right: 1em;
+      }
+    }
+  }
+}

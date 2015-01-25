@@ -1,7 +1,16 @@
 Lever.Websocket = Ember.Object.extend
   socket: null
+  state: null
+
+  connected: (->
+    return true if @get('state') is 1
+    false
+  ).property 'state'
 
   init: ->
+    @connectSocket()
+
+  connectSocket: ->
     console.log 'connecting to websocket'
     try
       connection = new WebSocket("ws://#{window.location.host}/ws")
@@ -10,10 +19,21 @@ Lever.Websocket = Ember.Object.extend
 
     @set 'socket', connection
 
+    @get('socket').onopen = (event)=>
+      @set 'state', @get('socket.readyState')
     @get('socket').onmessage = (event)=>
+      @set 'state', @get('socket.readyState')
       @handleMessage(event)
     @get('socket').onerror = (error)=>
+      @set 'state', @get('socket.readyState')
       @handleError(error)
+    @get('socket').onclose = (event)=>
+      console.log 'socket closed, reconnecting'
+      @set 'state', @get('socket.readyState')
+      setTimeout =>
+        @connectSocket()
+      , 1000
+
 
   handleMessage: (message)->
     if message.data == 'ping'
@@ -61,6 +81,12 @@ Lever.Websocket = Ember.Object.extend
         store.find(data.data.modelName, data.data.modelId).then (model)->
           if model
             model.reload();
+
+  sub: (key)->
+    console.log key
+
+  unsub: (key)->
+    console.log key
 
 
 Lever.register "socket:main", Lever.Websocket

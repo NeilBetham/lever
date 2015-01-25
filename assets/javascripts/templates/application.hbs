@@ -1,14 +1,11 @@
 <header>
-  <span class="ten"></span>
-  <span class="big">
+  <div id="root-link">
     {{#link-to 'index'}}Lever{{/link-to}}
-  </span>
-  <span class="spacer"></span>
-  <span>
-    <a {{action 'restartServer'}} class="btn btn--xs">Restart</a>
-    <a {{action 'shutdownServer'}} class="btn btn--xs">Shutdown</a>
-  </span>
-  <span class="ten"></span>
+  </div>
+
+  <div id="socket-status" {{bind-attr class="socket.connected:connected:disconnected"}}>
+    <span class="ion-code-working" {{bind-attr class="socket.connected:ion-code-working:ion-code"}}></span>
+  </div>
 </header>
 <main>
     {{outlet}}
