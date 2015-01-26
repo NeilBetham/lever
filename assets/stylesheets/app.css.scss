@@ -3,10 +3,28 @@
  *= require ionicons
  */
 
-$brand_color: #51bbfe;
-$brand_grey: rgba(255, 255, 255, .8);
-$log_background_color: #444;
-$brand_white: #EEE;
+$brand_color: #357ded;
+$text_color: #ddd;
+$background_color: #343434;
+
+$white_on_black: true;
+
+
+@function text_color() {
+  @if $white_on_black == true {
+    @return $text_color;
+  } @else {
+    @return invert($text_color);
+  }
+}
+
+@function background_color() {
+  @if $white_on_black == true {
+    @return $background_color;
+  } @else {
+    @return invert($background_color);
+  }
+}
 
 * {
   font-family: inherit;
@@ -18,51 +36,12 @@ body {
   font-size: 1.2em;
   font-weight: 300;
 
-  color: #000;
-  background-color: #eaeaea;
+  color: text_color();
+  background-color: background_color();
 
   margin: 0;
 
   vertical-align: middle;
-}
-
-#root-link {
-  position: fixed;
-
-  padding: .2em;
-
-  margin-left: .3em;
-
-  background-color: #5896e6;
-
-  font-size: 2em;
-  top: 0;
-  left: 0;
-}
-
-#socket-status {
-  position: fixed;
-  top: 1em;
-  right: 1em;
-  width: 1em;
-  height: 1em;
-  font-size: 1.3em;
-  padding: .5em;
-
-  text-align: center;
-
-  &.connected {
-    background-color: #5dd39e;
-  }
-
-  &.disconnected {
-    background-color: #b24c63;
-  }
-}
-
-main {
-  margin: 8px;
-  margin-top: 70px;
 }
 
 .well {
@@ -72,10 +51,10 @@ main {
 
 a {
   text-decoration: none;
-  color: #000;
+  color: text_color();
 
   &:visited {
-    color: #000;
+    color: text_color();
   }
 
   &:hover {
@@ -112,7 +91,7 @@ progress {
   appearance: none;
 
   padding: .1em;
-  border: 1px solid #000;
+  border: 1px solid text_color();
   margin: .05em;
   margin-top: 2px;
 
@@ -185,8 +164,8 @@ pre#log {
   border-radius: 4px;
   counter-reset: line-numbering;
 
-  background-color: $log_background_color;
-  color: $brand_white;
+  background-color: lighten(background_color(), 5%);
+  color: text_color();
 
   .cut {
     padding: 20px 15px 0 55px
@@ -198,11 +177,11 @@ pre#log {
     min-height: 16px;
 
     &:nth-child(odd) {
-      background-color: lighten($log_background_color, 2%);
+      background-color: lighten(background_color(), 2%);
     }
 
     &:hover {
-      background-color: lighten($log_background_color, 10%);
+      background-color: lighten(background_color(), 10%);
     }
 
     a {
@@ -212,10 +191,10 @@ pre#log {
       margin-left: -33px;
       cursor: pointer;
       text-decoration: none;
-      color: darken($brand_white, 50%);
+      color: darken(text_color(), 50%);
 
       &:hover {
-        color: $brand_white;
+        color: text_color();
       }
 
       &::before {
@@ -225,4 +204,66 @@ pre#log {
       }
     }
   }
+}
+
+header {
+
+  #root-link {
+    position: fixed;
+
+    margin-left: .3em;
+
+    font-size: 2em;
+    top: 0;
+    left: 0;
+  }
+
+  #socket-status {
+    position: fixed;
+    top: 1em;
+    right: 1em;
+    width: 1em;
+    height: 1em;
+    font-size: 1.3em;
+    padding: .5em;
+
+    text-align: center;
+
+    &.connected {
+      background-color: $brand_color;
+    }
+
+    &.disconnected {
+      background-color: adjust-hue($brand_color, -75deg);
+    }
+  }
+
+  span {
+    color: #000;
+  }
+
+  a {
+    color: #000;
+
+    padding: 0 .2em;
+    height: 1.4em;
+
+    display: table-cell;
+    vertical-align: bottom;
+
+    background-color: $brand_color;
+
+    &:visited {
+      color: #000;
+    }
+
+    &:hover {
+      background-color: lighten($brand_color, 10%);
+    }
+  }
+}
+
+main {
+  margin: 8px;
+  margin-top: 70px;
 }
