@@ -29,8 +29,9 @@ Lever.timedChunk = (items, process, context, callback) ->
   setTimeout (->
     start = +new Date()
     loop
+      console.log 'batch'
       process.call context, todo.shift()
-      break unless todo.length > 0 and (+new Date() - start < 200)
+      break unless todo.length > 0 and (+new Date() - start < 50)
     if todo.length > 0
       setTimeout arguments.callee, 25
     else
