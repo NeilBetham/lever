@@ -1,6 +1,5 @@
 /*
- *= require fonts
- *= require ionicons
+ *= require_tree .
  */
 
 $brand_color: #357ded;
@@ -266,4 +265,8 @@ header {
 main {
   margin: 8px;
   margin-top: 70px;
+}
+
+.hidden {
+  display: none;
 }

@@ -23,3 +23,18 @@ Ember.Application.initializer
   initialize: (container, application)->
     # Lookup the websocket handler to get the connection started
     container.lookup 'socket:main'
+
+Lever.timedChunk = (items, process, context, callback) ->
+  todo = items.concat() #create a clone of the original
+  setTimeout (->
+    start = +new Date()
+    loop
+      process.call context, todo.shift()
+      break unless todo.length > 0 and (+new Date() - start < 200)
+    if todo.length > 0
+      setTimeout arguments.callee, 25
+    else
+      callback items
+    return
+  ), 25
+  return
