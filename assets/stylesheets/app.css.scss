@@ -164,7 +164,7 @@ pre#log {
   border-radius: 4px;
   counter-reset: line-numbering;
 
-  background-color: lighten(background_color(), 5%);
+  background-color: lighten(background_color(), 4%);
   color: text_color();
 
   .cut {
@@ -177,11 +177,11 @@ pre#log {
     min-height: 16px;
 
     &:nth-child(odd) {
-      background-color: lighten(background_color(), 2%);
+      background-color: lighten(background_color(), 3%);
     }
 
     &:hover {
-      background-color: lighten(background_color(), 10%);
+      background-color: lighten(background_color(), 6%);
     }
 
     a {
@@ -191,7 +191,7 @@ pre#log {
       margin-left: -33px;
       cursor: pointer;
       text-decoration: none;
-      color: darken(text_color(), 50%);
+      color: darken(text_color(), 40%);
 
       &:hover {
         color: text_color();
