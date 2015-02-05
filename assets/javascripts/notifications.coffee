@@ -23,5 +23,6 @@ Lever.Notifications = Ember.Object.extend
 
 Lever.register "notifications:main", Lever.Notifications
 Lever.inject "application", "notifications", "notifications:main"
+Lever.inject "socket", "notifications", "notifications:main"
 Lever.inject "controller", "notifications", "notifications:main"
 Lever.inject "view", "notifications", "notifications:main"

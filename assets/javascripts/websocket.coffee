@@ -15,6 +15,9 @@ Lever.Websocket = Ember.Object.extend
     try
       connection = new WebSocket("ws://#{window.location.host}/ws")
     catch
+      @get('notifications').newFlash
+        message:'Welp, can\'t connect to websocket, no live updates for you'
+        duration: 20
       console.error 'can\'t connect to web socket server'
 
     @set 'socket', connection
@@ -32,6 +35,9 @@ Lever.Websocket = Ember.Object.extend
 
     @get('socket').onclose = (event)=>
       console.log 'socket closed, reconnecting'
+      @get('notifications').newFlash
+        message:'Welp, the websocket got closed, trying to reconnect...'
+        duration: 5
       @set 'state', @get('socket.readyState')
       setTimeout =>
         @connectSocket()
