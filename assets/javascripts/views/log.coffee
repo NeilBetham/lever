@@ -68,7 +68,8 @@ Lever.LogView = Ember.View.extend
     if @get('initialLoadComplete') is false
       @set 'initialLoadInProgress', true
       Lever.timedChunk parts.slice(start, start + added), (part)->
-        @logEngine.set(part.index, part.content)
+        if part
+          @logEngine.set(part.index, part.content)
       , @, =>
         @set 'loading', false
         @set 'initialLoadComplete', true
