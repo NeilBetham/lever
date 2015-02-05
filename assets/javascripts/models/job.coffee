@@ -14,11 +14,11 @@ Lever.Job = DS.Model.extend
 
   currentLogUpdater: (->
     @get('logs').then (data)=>
+      return unless data.get('lastObject.isLoaded')
       @set 'currentLog', data.get('lastObject')
   ).observes 'logs.@each'
 
   currentLog: null
-
 
   encoding: (->
     @get('state') is 'encoding'

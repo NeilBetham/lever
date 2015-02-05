@@ -4,16 +4,14 @@ module Lever
       EM.synchrony do
         info 'Lever starting'
 
-        $REDIS = EM::Hiredis.connect
-
         # Check for connection to redis
-        unless EM::Synchrony.sync($REDIS.ping) == 'PONG'
+        unless REDIS.ping == 'PONG'
           error 'Can\'t talk to redis'
           exit 1
         end
 
         # Flush redis DB
-        EM::Synchrony.sync $REDIS.flushdb
+        REDIS.flushdb
 
         setup_ws_event_channel
         catch_signals

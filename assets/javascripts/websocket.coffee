@@ -21,12 +21,15 @@ Lever.Websocket = Ember.Object.extend
 
     @get('socket').onopen = (event)=>
       @set 'state', @get('socket.readyState')
+
     @get('socket').onmessage = (event)=>
       @set 'state', @get('socket.readyState')
       @handleMessage(event)
+
     @get('socket').onerror = (error)=>
       @set 'state', @get('socket.readyState')
       @handleError(error)
+
     @get('socket').onclose = (event)=>
       console.log 'socket closed, reconnecting'
       @set 'state', @get('socket.readyState')

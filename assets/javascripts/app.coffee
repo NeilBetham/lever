@@ -4,6 +4,7 @@
 #= require ../../vendor/assets/bower_components/ember/ember.js
 #= require ../../vendor/assets/bower_components/ember-data/ember-data.min.js
 #= require ../../vendor/assets/bower_components/humps/humps.js
+#= require ../../vendor/assets/bower_components/paralleljs/lib/parallel.js
 #= require_tree ../../vendor/assets/javascripts
 #= require_tree ./templates
 #= require_self
@@ -29,13 +30,12 @@ Lever.timedChunk = (items, process, context, callback) ->
   setTimeout (->
     start = +new Date()
     loop
-      console.log 'batch'
       process.call context, todo.shift()
-      break unless todo.length > 0 and (+new Date() - start < 50)
+      break unless todo.length > 0 and (+new Date() - start < 100)
     if todo.length > 0
-      setTimeout arguments.callee, 25
+      setTimeout arguments.callee, 5
     else
       callback items
     return
-  ), 25
+  ), 5
   return

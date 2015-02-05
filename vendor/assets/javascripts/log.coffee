@@ -16,7 +16,7 @@ Log.extend = (one, other) ->
 Log.extend Log,
   DEBUG: false
   SLICE: 500
-  TIMEOUT: 25
+  TIMEOUT: 5
   FOLD: /fold:(start|end):([\w_\-\.]+)/
   TIME: /time:(start|end):([\w_\-\.]+):?([\w_\-\.\=\,]*)/
 
@@ -43,15 +43,15 @@ Log.extend Log.Node.prototype,
   remove: () ->
     @log.remove(@element)
     @parent.children.remove(@)
-Object.defineProperty Log.Node::, 'log', {
+Object.defineProperty Log.Node::, 'log',
   get: () -> @_log ||= @parent?.log || @parent
-}
-Object.defineProperty Log.Node::, 'firstChild', {
+
+Object.defineProperty Log.Node::, 'firstChild',
   get: () -> @children.first
-}
-Object.defineProperty Log.Node::, 'lastChild', {
+
+Object.defineProperty Log.Node::, 'lastChild',
   get: () -> @children.last
-}
+
 
 
 Log.Nodes = (parent) ->
@@ -85,15 +85,15 @@ Log.extend Log.Nodes.prototype,
     @items.slice().forEach(func)
   map: (func) ->
     @items.map(func)
-Object.defineProperty Log.Nodes::, 'first', {
+
+Object.defineProperty Log.Nodes::, 'first',
   get: () -> @items[0]
-}
-Object.defineProperty Log.Nodes::, 'last', {
+
+Object.defineProperty Log.Nodes::, 'last',
   get: () -> @items[@length - 1]
-}
-Object.defineProperty Log.Nodes::, 'length', {
+
+Object.defineProperty Log.Nodes::, 'length',
   get: () -> @items.length
-}
 
 
 Log.Part = (id, num, string) ->
@@ -112,7 +112,7 @@ Log.extend Log.Part,
 Log.Part.prototype = Log.extend new Log.Node,
   remove: ->
     # don't remove parts
-  process: (slice, num) ->
+  process: (slice, num) -> # TODO Lots of CPU usage here too
     for string in (@slices[slice] || [])
       return if @log.limit?.limited
       # console.log "P processing: #{JSON.stringify(string)}"
@@ -197,7 +197,7 @@ Log.Span.prototype = Log.extend new Log.Node,
     line = Log.Line.create(@log, spans)
     line.render()
     line.clear() if line.cr
-  clear: ->
+  clear: -> # TODO Lots of CPU usage here
     if @prev && @isSibling(@prev) && @isSequence(@prev)
       @prev.clear()
       @prev.remove()
@@ -209,25 +209,26 @@ Log.Span.prototype = Log.extend new Log.Node,
     siblings = []
     siblings.push(span) while (span = (span || @)[type]) && @isSibling(span)
     siblings
-Object.defineProperty Log.Span::, 'data', {
+
+Object.defineProperty Log.Span::, 'data',
   get: () -> { id: @id, type: 'span', text: @text, class: @class, time: @time }
-}
-Object.defineProperty Log.Span::, 'line', {
+
+Object.defineProperty Log.Span::, 'line',
   get: () -> @_line
   set: (line) ->
     @line.remove(@) if @line
     @_line = line
     @line.add(@) if @line
-}
-Object.defineProperty Log.Span::, 'element', {
+
+Object.defineProperty Log.Span::, 'element',
   get: () -> document.getElementById(@id)
-}
-Object.defineProperty Log.Span::, 'head', {
+
+Object.defineProperty Log.Span::, 'head',
   get: () -> @siblings('prev').reverse()
-}
-Object.defineProperty Log.Span::, 'tail', {
+
+Object.defineProperty Log.Span::, 'tail',
   get: () -> @siblings('next')
-}
+
 
 
 Log.Line = (log) ->
@@ -280,24 +281,24 @@ Log.extend Log.Line.prototype,
     # cr.clear() if cr = @crs.pop()
     cr.clear() for cr in @crs
 
-Object.defineProperty Log.Line::, 'id', {
+Object.defineProperty Log.Line::, 'id',
   get: () -> @spans[0]?.id
-}
-Object.defineProperty Log.Line::, 'data', {
+
+Object.defineProperty Log.Line::, 'data',
   get: () -> { type: 'paragraph', nodes: @nodes }
-}
-Object.defineProperty Log.Line::, 'nodes', {
+
+Object.defineProperty Log.Line::, 'nodes',
   get: () -> @spans.map (span) -> span.data
-}
-Object.defineProperty Log.Line::, 'prev', {
+
+Object.defineProperty Log.Line::, 'prev',
   get: () -> @spans[0].prev?.line
-}
-Object.defineProperty Log.Line::, 'next', {
+
+Object.defineProperty Log.Line::, 'next',
   get: () -> @spans[@spans.length - 1].next?.line
-}
-Object.defineProperty Log.Line::, 'crs', {
+
+Object.defineProperty Log.Line::, 'crs',
   get: () -> @spans.filter (span) -> span.cr
-}
+
 
 Log.Fold = (log, event, name) ->
   Log.Line.apply(@, arguments)
@@ -324,15 +325,15 @@ Log.Fold.prototype = Log.extend new Log.Line,
     # console.log format document.firstChild.innerHTML + '\n'
     @active = @log.folds.add(@data)
 
-Object.defineProperty Log.Fold::, 'id', {
+Object.defineProperty Log.Fold::, 'id',
   get: () -> "fold-#{@event}-#{@name}"
-}
-Object.defineProperty Log.Fold::, 'span', {
+
+Object.defineProperty Log.Fold::, 'span',
   get: () -> @spans[0]
-}
-Object.defineProperty Log.Fold::, 'data', {
+
+Object.defineProperty Log.Fold::, 'data',
   get: () -> { type: 'fold', id: @id, event: @event, name: @name }
-}
+
 #### End nodes.coffee
 
 Log.prototype = Log.extend new Log.Node,
@@ -397,16 +398,16 @@ Log.extend Log.Folds.Fold.prototype,
     classes.push('active') if @fold.childNodes.length > 2
     classes.join(' ')
 
-Object.defineProperty Log.Folds.Fold::, 'fold', {
+Object.defineProperty Log.Folds.Fold::, 'fold',
   get: () -> @_fold ||= document.getElementById(@start)
-}
-Object.defineProperty Log.Folds.Fold::, 'nodes', {
+
+Object.defineProperty Log.Folds.Fold::, 'nodes',
   get: () ->
     node = @fold
     nodes = []
     nodes.push(node) while (node = node.nextSibling) && node.id != @end
     nodes
-}
+
 #### End folds.coffee
 
 #### Start times.coffee
@@ -440,12 +441,12 @@ Log.extend Log.Times.Time.prototype,
     element.lastChild.nodeValue = "#{@duration}s"
     # element.appendChild document.createTextNode(@duration)
 
-Object.defineProperty Log.Times.Time::, 'duration', {
+Object.defineProperty Log.Times.Time::, 'duration',
   get: ->
     duration = @stats.duration / 1000 / 1000 / 1000 # nanoseconds
     duration.toFixed(2)
-}
-Object.defineProperty Log.Times.Time::, 'stats', {
+
+Object.defineProperty Log.Times.Time::, 'stats',
   get: ->
     return {} unless @end && @end.stats
     stats = {}
@@ -453,7 +454,7 @@ Object.defineProperty Log.Times.Time::, 'stats', {
       stat = stat.split('=')
       stats[stat[0]] = stat[1]
     stats
-}
+
 #### End times.coffee
 
 #### Start deansi.coffee
@@ -515,9 +516,9 @@ Log.Limit.prototype = Log.extend new Log.Listener,
   count: 0
   insert: (log, node, pos) ->
     @count += 1 if node.type == 'paragraph' && !node.hidden
-Object.defineProperty Log.Limit::, 'limited', {
+Object.defineProperty Log.Limit::, 'limited',
   get: () -> @count >= @max_lines
-}
+
 #### End limit.coffee
 
 #### Start renderer.coffee

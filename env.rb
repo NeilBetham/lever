@@ -31,3 +31,8 @@ Dir["#{File.dirname(__FILE__)}/app/**/*.rb"].each { |f| require f }
 
 # Load config file
 CONFIG = YAML.load_file './config/config.yml'
+
+# Setup redis connection pool
+REDIS = EventMachine::Synchrony::ConnectionPool.new(size: 10) do
+  Redis.new driver: :synchrony
+end

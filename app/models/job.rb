@@ -108,7 +108,9 @@ class Job < ActiveRecord::Base
 
   def handle_encode_exit(data)
     update(state: 'successful')
+    info 'syncing log'
     @log_handler.sync.callback do
+      info 'commiting log'
       current_log.update(complete: true)
       current_log.commit_log
     end
@@ -117,8 +119,10 @@ class Job < ActiveRecord::Base
   def handle_encode_failed(data)
     update(state: 'failed') unless state == 'queued'
     error "encode failed - #{data}"
+    info 'syncing log'
     @log_handler.sync.callback do
       current_log.update(complete: true)
+      info 'commiting log'
       current_log.commit_log
     end
   end

@@ -270,3 +270,67 @@ main {
 .hidden {
   display: none;
 }
+
+
+@-webkit-keyframes perspectiveDownRetourn {
+  0% {
+    -webkit-transform-origin: 0 100%;
+    -webkit-transform: rotateX(-180deg);
+  }
+
+  100% {
+    -webkit-transform-origin: 0 100%;
+    -webkit-transform: rotateX(0deg);
+  }
+}
+
+.magictime {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.perspectiveDownRetourn {
+  -webkit-backface-visibility: visible !important;
+  backface-visibility: visible !important;
+  -webkit-animation-name: perspectiveDownRetourn;
+  animation-name: perspectiveDownRetourn;
+}
+
+
+.centering-container {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+}
+
+#flash-message-container {
+  position: relative;
+  bottom: 0;
+  left: -50%;
+  height: 2em;
+  line-height: 2em;
+  min-width: 20em;
+  margin: 0 auto;
+
+  padding: .2em .35em;
+
+  text-align: center;
+
+  background-color: lighten(background_color(), 15%);
+
+  border-top-right-radius: .2em;
+  border-top-left-radius: .2em;
+
+  span {
+    margin: auto;
+
+    color: text_color();
+
+    &:last-child{
+      float: right;
+      margin: 0 .25em;
+    }
+  }
+}
