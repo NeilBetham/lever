@@ -27,6 +27,9 @@ class LeverApp < Sinatra::Base
       # config.embed_in_root = true
     end
 
+    # Turn down active record logging 
+    ActiveRecord::Base.logger.level = 1
+
     set :websockets, []
   end
 
