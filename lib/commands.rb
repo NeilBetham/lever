@@ -27,7 +27,7 @@ module Commands
   end
 
   def mv(file, target_location)
-    "mv #{file} #{target_location}"
+    "mv \"#{file}\" \"#{target_location}\""
   end
 
   module_function :mount, :unmount, :mkdir, :rm, :mv

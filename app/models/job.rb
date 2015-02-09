@@ -117,7 +117,7 @@ class Job < ActiveRecord::Base
       current_log.commit_log
     end
 
-    EventMachine.next_tick move_encoded_file
+    EventMachine.next_tick { move_encoded_file }
   end
 
   def handle_encode_failed(data)
@@ -133,7 +133,7 @@ class Job < ActiveRecord::Base
 
   def move_encoded_file
     EM.synchrony do
-      Process.open(Commands.mv(output_file, input_folder))
+      Process.open(Commands.mv(output_file_name, input_folder))
         .callback { |data| handle_move_success(data) }
         .errback { |data| handle_move_failed(data) }
     end
