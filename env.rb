@@ -1,8 +1,13 @@
 require 'rubygems'
-require 'bundler'
+require 'bundler/setup'
 require 'yaml'
 require 'json'
 require 'logger'
+
+# Require all the gems
+Bundler.require(:default)
+
+
 
 # Setup loging
 module Kernel
@@ -16,9 +21,6 @@ module Kernel
     code
   end
 end
-
-# Require all the gems
-Bundler.require(:default)
 
 # Modify the load path
 $LOAD_PATH.unshift(File.dirname(__FILE__))
