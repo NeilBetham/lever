@@ -108,23 +108,44 @@ class Job < ActiveRecord::Base
 
   def handle_encode_exit(data)
     update(state: 'successful')
-    info 'syncing log'
+    info "encode of #{name} successful"
+
+    debug "syncing #{name} log"
     @log_handler.sync.callback do
-      info 'commiting log'
+      debug 'commiting log'
       current_log.update(complete: true)
       current_log.commit_log
     end
+
+    EventMachine.next_tick move_encoded_file
   end
 
   def handle_encode_failed(data)
     update(state: 'failed') unless state == 'queued'
-    error "encode failed - #{data}"
-    info 'syncing log'
+    error "encode failed for #{name} - #{data}"
+    debug "syncing #{name} log"
     @log_handler.sync.callback do
       current_log.update(complete: true)
-      info 'commiting log'
+      debug 'commiting log'
       current_log.commit_log
     end
+  end
+
+  def move_encoded_file
+    EM.synchrony do
+      Process.open(Commands.mv(output_file, input_folder))
+        .callback { |data| handle_move_success(data) }
+        .errback { |data| handle_move_failed(data) }
+    end
+  end
+
+  def handle_move_failed(data)
+    update(state: 'failed') unless state == 'queued'
+    error "move for #{name} failed - #{data}"
+  end
+
+  def handle_move_success(data)
+    info "move succeeded for #{name}"
   end
 
   def validates_only_one_encoding_job
