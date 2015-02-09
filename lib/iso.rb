@@ -24,14 +24,12 @@ module ISO
 
   # Interface for ISO mounter returns defferrables
   def mount(iso_path)
-    debug "connecting to '#{CONFIG['main']['working_dir']}#{CONFIG['iso_mounter']['socket_file']}'"
     connection = EM.connect_unix_domain "#{CONFIG['main']['working_dir']}#{CONFIG['iso_mounter']['socket_file']}", ISO::Mounter
     connection.send_line JSON.generate action: 'mount', path: iso_path
     connection.deferrable = EM::DefaultDeferrable.new
   end
 
   def unmount(mount_path)
-    debug "connecting to '#{CONFIG['main']['working_dir']}#{CONFIG['iso_mounter']['socket_file']}'"
     connection = EM.connect_unix_domain "#{CONFIG['main']['working_dir']}#{CONFIG['iso_mounter']['socket_file']}", ISO::Mounter
     connection.send_line JSON.generate action: 'unmount', path: mount_path
     connection.deferrable = EM::DefaultDeferrable.new

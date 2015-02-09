@@ -117,4 +117,7 @@ EventMachine.run do
 
   info 'Starting ISO mounting daemon'
   EventMachine.start_server "#{CONFIG['main']['working_dir']}#{File::SEPARATOR}#{CONFIG['iso_mounter']['socket_file']}", ISO
+
+  # Chmod the socket so everyone can talk to it
+  EventMachine.next_tick { File.chmod(0777, "#{CONFIG['main']['working_dir']}#{File::SEPARATOR}#{CONFIG['iso_mounter']['socket_file']}")  }
 end
