@@ -1,7 +1,7 @@
 module Commands
   def mount(target_iso, dest_dir)
     if Gem::Platform.local.os == 'linux'
-      "mount -o loop #{target_iso} #{dest_dir}"
+      "mount -o loop \"#{target_iso}\" \"#{dest_dir}\""
     elsif Gem::Platform.local.os == 'darwin'
       "hdiutil mount -mountpoint \"#{dest_dir}\" \"#{target_iso}\""
     else
