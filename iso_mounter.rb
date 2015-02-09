@@ -119,5 +119,5 @@ EventMachine.run do
   EventMachine.start_server "#{CONFIG['main']['working_dir']}#{File::SEPARATOR}#{CONFIG['iso_mounter']['socket_file']}", ISO
 
   # Chmod the socket so everyone can talk to it
-  EventMachine.next_tick { File.chmod(0777, "#{CONFIG['main']['working_dir']}#{File::SEPARATOR}#{CONFIG['iso_mounter']['socket_file']}")  }
+  EventMachine.next_tick { File.chmod(0777, "#{CONFIG['main']['working_dir']}#{File::SEPARATOR}#{CONFIG['iso_mounter']['socket_file']}", CONFIG['main']['working_dir'])  }
 end
