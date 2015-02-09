@@ -27,6 +27,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 Dir["#{File.dirname(__FILE__)}/lib/**/*.rb"].each { |f| require f }
 
 # Load app components
+Dir["#{File.dirname(__FILE__)}/app/models/concerns/*.rb"].each { |f| require f }
 Dir["#{File.dirname(__FILE__)}/app/**/*.rb"].each { |f| require f }
 
 # Load config file
