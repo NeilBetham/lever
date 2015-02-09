@@ -10,7 +10,7 @@ module ISO
   end
 
   def send_line(data)
-    debug "Sending: #{data}"
+    info "Sending: #{data}"
     send_data "#{data}\n"
   end
 
