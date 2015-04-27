@@ -34,6 +34,7 @@ module Lever
           signals: false
         )
 
+        scan
         check_for_stopped_encodes
 
         EventMachine.add_periodic_timer(eval(CONFIG['main']['scan_interval'])) { scan }

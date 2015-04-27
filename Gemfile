@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
-ruby '2.1.5'
+ruby '2.2.2'
 
 # sinatra for web interface
 gem 'sinatra', '~> 1.4.5'
 gem 'sinatra-contrib', '~> 1.4.2'
 
 # eventmachine for running the server
-gem 'event_machine', '~> 0.4.1', require: 'eventmachine'
+gem 'eventmachine', '~> 1.0.7', require: 'eventmachine'
 gem 'rack-fiber_pool', '~> 0.9.3'
 gem 'sinatra-websocket', '~> 0.3.1'
 

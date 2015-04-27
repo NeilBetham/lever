@@ -17,11 +17,17 @@ module Lever
 
     # Sequential part handler
     def handle_parts
-      @part_queue.pop do |part|
-        @log.add_part part
-        @part_queue.num_waiting > 0 ? EM.next_tick { EM.synchrony { handle_parts } } : @processing = false
-        @sync_defer.succeed if @sync_defer && @part_queue.num_waiting == 0
+      1..5.each do
+        @part_queue.pop do |part|
+          if part
+            @log.add_part part
+          else
+            break
+          end
+        end
       end
+      @sync_defer.succeed if @sync_defer && @part_queue.num_waiting == 0
+      @part_queue.num_waiting > 0 ? EM.next_tick { EM.synchrony { handle_parts } } : @processing = false
     end
 
     # Call when waiting for queue to empty

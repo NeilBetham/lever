@@ -14,6 +14,7 @@ module Lever
 
     # Schedule the remaining directories for encoding
     dirs.each do |dir|
+      info "Scanning #{dir.dir}"
       next if Job.where(name: dir.dir).count > 0
       next unless dir.encodeable?
 

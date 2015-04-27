@@ -17,6 +17,6 @@ module Streamable
       }
     }
 
-    LeverApp.settings.event_channel.push msg.to_json
+    LeverApp.settings.event_channel.push msg.to_json if LeverApp.settings.respond_to? :event_channel
   end
 end
