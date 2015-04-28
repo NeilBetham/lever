@@ -13,8 +13,7 @@ module Lever
         # Flush redis DB
         REDIS.flushdb
 
-        setup_ws_event_channel
-        catch_signals
+
 
         # Mount the app at /
         dispatch = Rack::Builder.app do
@@ -34,6 +33,8 @@ module Lever
           signals: false
         )
 
+        setup_ws_event_channel
+        catch_signals
         scan
         check_for_stopped_encodes
 

@@ -4,9 +4,7 @@ module Lever
     attr_reader :dir
 
     def initialize(directory)
-      # Ruby is not recognizing direcotry string type
-      # TODO: Charlock Holmes
-      @dir = directory.force_encoding(Encoding::UTF_8)
+      @dir = directory
 
       # Check if the directory is a full path or relative
       if Dir.exist? @dir

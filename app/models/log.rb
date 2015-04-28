@@ -20,10 +20,6 @@ class Log < ActiveRecord::Base
   def add_part(part)
     part_index = REDIS.llen(redis_key)
 
-    # Yet again more encoding issues...
-    # TODO: Charlock Holmes
-    part = part.force_encoding(Encoding::UTF_8)
-
     msg = {
       type: 'log:addpart',
       part: {
