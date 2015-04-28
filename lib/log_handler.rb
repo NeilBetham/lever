@@ -1,10 +1,10 @@
 module Lever
   # LogHandler's sole purpose is to sequentially handle parts of logs so index values remain consistent
   class LogHandler
-    def initialize(log_id)
+    def initialize(log)
       @part_queue = EventMachine::Queue.new
       @processing = false
-      @log = Log.find log_id
+      @log = Log.find log.id
       @sync_defer = nil
     end
 
