@@ -460,7 +460,7 @@ Object.defineProperty Log.Times.Time::, 'stats',
 #### Start deansi.coffee
 Log.Deansi =
   CLEAR_ANSI: ///
-(?:\033) # leader
+(?:\x33) # leader
 (?:
     \[0?c                 # query device code
   | \[[0356]n             # device-related
