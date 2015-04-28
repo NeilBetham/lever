@@ -17,7 +17,8 @@ gem 'thin', '~> 1.6.3'
 gem 'sqlite3', '~> 1.3.10'
 
 # activerecord for db access
-gem 'sinatra-activerecord', '~> 2.0.3', require: 'sinatra/activerecord'
+gem 'sinatra-activerecord', '~> 2.0.6', require: 'sinatra/activerecord'
+gem 'activerecord', '~> 4.2.1'
 
 # templating engine
 gem 'haml', '~> 4.0.6'
