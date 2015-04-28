@@ -99,7 +99,7 @@ Object.defineProperty Log.Nodes::, 'length',
 Log.Part = (id, num, string) ->
   Log.Node.apply(@, arguments)
   @string = string || ''
-  @string = @string.replace(/\033\[1000D/gm, '\r')
+  @string = @string.replace(/\x33\[1000D/gm, '\r')
   @string = @string.replace(/\r+\n/gm, '\n')
   @strings = @string.split(/^/gm) || []
   @slices = (@strings.splice(0, Log.SLICE) while @strings.length > 0)
