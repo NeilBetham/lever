@@ -17,7 +17,7 @@ module Lever
 
     # Sequential part handler
     def handle_parts
-      1..5.each do
+      (0..4).each do
         @part_queue.pop do |part|
           if part
             @log.add_part part
