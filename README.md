@@ -32,6 +32,6 @@ Once Lever completes an encode it will move the resulting file to the original d
 ---
 ### ISO Mounting
 
-The ISO mounting capabilities are restricted to this daemon to ensure that the app is a bit more secure than having everything run as the super user
+The ISO mounting capabilities are restricted to a seperate daemon to ensure that the app is a bit more secure than having everything run as the super user
 
-As such the iso mounter will only mount files from within the scan directory and it will only unmount directories from within the working directory. As such keep in mind where these directories are and don't put any important mounts in them for security reasons.
+As such the iso mounter will only mount files from within the scan directory and it will only unmount directories from within the working directory. Keep in mind where these directories are and don't put any important mounts in them for security reasons.
